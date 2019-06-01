@@ -52,7 +52,7 @@ percona_install() {
   dbdeployer unpack --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.ssl.tar.gz
   # pushd /root/sandboxes/msb_ps8_0_15
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -63,7 +63,7 @@ percona_install() {
   dbdeployer versions
   # pushd /root/sandboxes/msb_ps5.7.26
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -78,7 +78,7 @@ mariadb_install() {
   dbdeployer unpack --prefix=maria mariadb-${mdb_ver_four}-linux-glibc_214-x86_64.tar.gz
   # pushd /root/sandboxes/msb_maria10.4.5
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -88,7 +88,7 @@ mariadb_install() {
   dbdeployer unpack --prefix=maria mariadb-${mdb_ver_three}-linux-x86_64.tar.gz
   # pushd /root/sandboxes/msb_maria10.3.15
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -98,7 +98,7 @@ mariadb_install() {
   dbdeployer unpack --prefix=maria mariadb-${mdb_ver_two}-linux-x86_64.tar.gz
   # pushd /root/sandboxes/msb_maria10.2.24
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -108,7 +108,7 @@ mariadb_install() {
   dbdeployer unpack --prefix=maria mariadb-${mdb_ver_one}-linux-x86_64.tar.gz
   # pushd /root/sandboxes/msb_maria10.1.40
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -124,7 +124,7 @@ oracle_install() {
   dbdeployer unpack --prefix=oracle mysql-${oracle_ver_latest}.tar.xz
   # pushd /root/sandboxes/msb_oracle8.0.16
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -134,7 +134,7 @@ oracle_install() {
   dbdeployer unpack --prefix=oracle mysql-${oracle_ver}.tar.xz
   # pushd /root/sandboxes/msb_oracle5.7.26
   # ./my sqladmin var | tr -s ' '
-  # ./my sqladmin ver
+  # ./my sql -e '\s'
   # ./metadata help
   # ./metadata version
   # ./metadata flavor
@@ -169,7 +169,16 @@ cmds() {
   dbdeployer info version --flavor mysql 5.7
   echo
   if [[ "$(dbdeployer sandboxes)" ]]; then
-    dbdeployer global use "select @@server_id, @@port, @@server_uuid"
+    echo
+    echo "dbdeployer sandboxes"
+    dbdeployer sandboxes
+    echo
+    echo "sandbox info"
+    dbdeployer sandboxes | awk '{print $1}' | while read d; do
+      echo
+      echo "/root/sandboxes/$d/my sql -e '\s'"
+      /root/sandboxes/$d/my sql -e '\s'
+    done
   fi
 }
 
@@ -186,6 +195,29 @@ resetall() {
     echo
     echo "dbdeployer delete-binaries $b"
     echo y | dbdeployer delete-binaries $b
+  done
+}
+
+install_bins() {
+  echo "dbdeployer deploy single sandboxes"
+  dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
+  declare -a arrays
+  arrays=(${dbdeploy_bins})
+  for b in "${arrays[@]}"; do
+    echo
+    echo "creating $b single sandbox instance"
+    echo "dbdeployer deploy single $b"
+    dbdeployer deploy single $b
+  done
+  echo
+  echo "dbdeployer sandboxes"
+  dbdeployer sandboxes
+  echo
+  echo "sandbox info"
+  dbdeployer sandboxes | awk '{print $1}' | while read d; do
+    echo
+    echo "/root/sandboxes/$d/my sql -e '\s'"
+    /root/sandboxes/$d/my sql -e '\s'
   done
 }
 
@@ -206,10 +238,13 @@ case "$1" in
   check )
     cmds
     ;;
+  install-sandboxes )
+    install_bins
+    ;;
   * )
     echo
     echo "usage:"
     echo
-    echo "$0 {install|update|reset|check}"
+    echo "$0 {install|update|reset|check|install-sandboxes}"
     ;;
 esac

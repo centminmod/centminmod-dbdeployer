@@ -11,7 +11,7 @@ Usage
 
 usage:
 
-./dbdeployer.sh {install|update|reset|check}
+./dbdeployer.sh {install|update|reset|check|install-sandboxes}
 ```
 
 ## for dbdeployer binary
@@ -270,4 +270,315 @@ Directory ps5.7.26 removed
 dbdeployer delete-binaries ps8.0.15
 Do you want to delete ps8.0.15? y/[N] Proceeding with deletion
 Directory ps8.0.15 removed
+```
+
+# Deploy Single Sandbox Instances
+
+```
+./dbdeployer.sh install-sandboxes
+dbdeployer deploy single sandboxes
+
+creating maria10.1.40 single sandbox instance
+dbdeployer deploy single maria10.1.40
+Database installed in $HOME/sandboxes/msb_maria10_1_40
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.2.24 single sandbox instance
+dbdeployer deploy single maria10.2.24
+Database installed in $HOME/sandboxes/msb_maria10_2_24
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.3.15 single sandbox instance
+dbdeployer deploy single maria10.3.15
+Database installed in $HOME/sandboxes/msb_maria10_3_15
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.4.5 single sandbox instance
+dbdeployer deploy single maria10.4.5
+Database installed in $HOME/sandboxes/msb_maria10_4_5
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating oracle5.7.26 single sandbox instance
+dbdeployer deploy single oracle5.7.26
+Database installed in $HOME/sandboxes/msb_oracle5_7_26
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating oracle8.0.16 single sandbox instance
+dbdeployer deploy single oracle8.0.16
+Database installed in $HOME/sandboxes/msb_oracle8_0_16
+run 'dbdeployer usage single' for basic instructions'
+............... sandbox server started
+
+creating ps5.7.26 single sandbox instance
+dbdeployer deploy single ps5.7.26
+Database installed in $HOME/sandboxes/msb_ps5_7_26
+run 'dbdeployer usage single' for basic instructions'
+... sandbox server started
+
+creating ps8.0.15 single sandbox instance
+dbdeployer deploy single ps8.0.15
+Database installed in $HOME/sandboxes/msb_ps8_0_15
+run 'dbdeployer usage single' for basic instructions'
+............. sandbox server started
+
+dbdeployer sandboxes
+ msb_maria10_1_40         :   single   maria10.1.40   [10140 ]      
+ msb_maria10_2_24         :   single   maria10.2.24   [10224 ]      
+ msb_maria10_3_15         :   single   maria10.3.15   [10315 ]      
+ msb_maria10_4_5          :   single   maria10.4.5    [10405 ]      
+ msb_oracle5_7_26         :   single   oracle5.7.26   [5726 ]       
+ msb_oracle8_0_16         :   single   oracle8.0.16   [8016 18016 ] 
+ msb_ps5_7_26             :   single   ps5.7.26       [5727 ]       
+ msb_ps8_0_15             :   single   ps8.0.15       [8015 18015 ] 
+```
+
+# Check
+
+```
+./dbdeployer.sh check
+
+dbdeployer info version --flavor percona 8.0
+ps8.0.15
+
+dbdeployer info version --flavor percona 5.7
+ps5.7.26
+
+dbdeployer info version --flavor mariadb 10.4
+maria10.4.5
+
+dbdeployer info version --flavor mariadb 10.3
+maria10.3.15
+
+dbdeployer info version --flavor mariadb 10.2
+maria10.2.24
+
+dbdeployer info version --flavor mariadb 10.1
+maria10.1.40
+
+dbdeployer info version --flavor mysql 8.0
+oracle8.0.16
+
+dbdeployer info version --flavor mysql 5.7
+oracle5.7.26
+
+
+dbdeployer sandboxes
+ msb_maria10_1_40         :   single   maria10.1.40   [10140 ]      
+ msb_maria10_2_24         :   single   maria10.2.24   [10224 ]      
+ msb_maria10_3_15         :   single   maria10.3.15   [10315 ]      
+ msb_maria10_4_5          :   single   maria10.4.5    [10405 ]      
+ msb_oracle5_7_26         :   single   oracle5.7.26   [5726 ]       
+ msb_oracle8_0_16         :   single   oracle8.0.16   [8016 18016 ] 
+ msb_ps5_7_26             :   single   ps5.7.26       [5727 ]       
+ msb_ps8_0_15             :   single   ps8.0.15       [8015 18015 ] 
+
+sandbox info
+
+/root/sandboxes/msb_maria10_1_40/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.1.40/bin/mysql  Ver 15.1 Distrib 10.1.40-MariaDB, for Linux (x86_64) using readline 5.1
+
+Connection id:          14
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.1.40-MariaDB MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox10140.sock
+Uptime:                 18 min 11 sec
+
+Threads: 1  Questions: 41  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.037
+--------------
+
+
+/root/sandboxes/msb_maria10_2_24/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.2.24/bin/mysql  Ver 15.1 Distrib 10.2.24-MariaDB, for Linux (x86_64) using readline 5.1
+
+Connection id:          11
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.2.24-MariaDB MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox10224.sock
+Uptime:                 18 min 8 sec
+
+Threads: 7  Questions: 21  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.019
+--------------
+
+
+/root/sandboxes/msb_maria10_3_15/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.3.15/bin/mysql  Ver 15.1 Distrib 10.3.15-MariaDB, for Linux (x86_64) using readline 5.1
+
+Connection id:          11
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.3.15-MariaDB MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox10315.sock
+Uptime:                 18 min 5 sec
+
+Threads: 7  Questions: 21  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.019
+--------------
+
+
+/root/sandboxes/msb_maria10_4_5/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.4.5/bin/mysql  Ver 15.1 Distrib 10.4.5-MariaDB, for Linux (x86_64) using readline 5.1
+
+Connection id:          11
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.4.5-MariaDB MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox10405.sock
+Uptime:                 18 min 1 sec
+
+Threads: 7  Questions: 21  Slow queries: 0  Opens: 19  Flush tables: 1  Open tables: 13  Queries per second avg: 0.019
+--------------
+
+
+/root/sandboxes/msb_oracle5_7_26/my sql -e '\s'
+--------------
+/root/opt/mysql/oracle5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26, for linux-glibc2.12 (x86_64) using  EditLine wrapper
+
+Connection id:          5
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         5.7.26 MySQL Community Server (GPL)
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox5726.sock
+Uptime:                 17 min 57 sec
+
+Threads: 1  Questions: 29  Slow queries: 0  Opens: 111  Flush tables: 1  Open tables: 104  Queries per second avg: 0.026
+--------------
+
+
+/root/sandboxes/msb_oracle8_0_16/my sql -e '\s'
+--------------
+/root/opt/mysql/oracle8.0.16/bin/mysql  Ver 8.0.16 for linux-glibc2.12 on x86_64 (MySQL Community Server - GPL)
+
+Connection id:          11
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         8.0.16 MySQL Community Server - GPL
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    utf8mb4
+Db     characterset:    utf8mb4
+Client characterset:    utf8mb4
+Conn.  characterset:    utf8mb4
+UNIX socket:            /tmp/mysql_sandbox8016.sock
+Uptime:                 17 min 52 sec
+
+Threads: 2  Questions: 45  Slow queries: 0  Opens: 145  Flush tables: 3  Open tables: 46  Queries per second avg: 0.041
+--------------
+
+
+/root/sandboxes/msb_ps5_7_26/my sql -e '\s'
+--------------
+/root/opt/mysql/ps5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26-29, for Linux (x86_64) using  6.2
+
+Connection id:          5
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         5.7.26-29 Percona Server (GPL), Release 29, Revision 11ad961
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /tmp/mysql_sandbox5727.sock
+Uptime:                 17 min 23 sec
+
+Threads: 1  Questions: 29  Slow queries: 0  Opens: 111  Flush tables: 1  Open tables: 104  Queries per second avg: 0.027
+--------------
+
+
+/root/sandboxes/msb_ps8_0_15/my sql -e '\s'
+--------------
+/root/opt/mysql/ps8.0.15/bin/mysql  Ver 8.0.15-6 for Linux on x86_64 (Percona Server (GPL), Release 6, Revision 63abd08)
+
+Connection id:          11
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         8.0.15-6 Percona Server (GPL), Release 6, Revision 63abd08
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    utf8mb4
+Db     characterset:    utf8mb4
+Client characterset:    utf8mb4
+Conn.  characterset:    utf8mb4
+UNIX socket:            /tmp/mysql_sandbox8015.sock
+Uptime:                 16 min 48 sec
+
+Threads: 2  Questions: 45  Slow queries: 0  Opens: 124  Flush tables: 2  Open tables: 100  Queries per second avg: 0.044
+--------------
 ```
