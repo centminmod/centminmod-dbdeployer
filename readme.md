@@ -2,7 +2,17 @@
 
 [dbdeployer](https://github.com/datacharmer/dbdeployer) wrapper script for [centminmod.com LEMP stack](https://centminmod.com) environments on CentOS 7.x 64bit OSes.
 
-Usage
+# Content
+
+* [Usage](#usage)
+  * [for dbdeployer.sh](#for-dbdeployersh)
+  * [for dbdeployer binary](#for-dbdeployer-binary)
+* [Install](#install)
+* [Reset](#reset)
+* [Deploy Single Sandbox Instances](#deploy-single-sandbox-instances)
+* [Check](#check)
+
+# Usage
 
 ## for dbdeployer.sh
 
