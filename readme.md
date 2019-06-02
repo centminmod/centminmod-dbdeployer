@@ -350,34 +350,23 @@ dbdeployer sandboxes
 # Check
 
 ```
-./dbdeployer.sh check
+./dbdeployer.sh check                   
 
-dbdeployer info version --flavor percona 8.0
-ps8.0.15
+---------------------------------------------------------------
+dbdeployer installed binaries
+---------------------------------------------------------------
+dbdeployer info version --flavor percona 8.0 = ps8.0.15
+dbdeployer info version --flavor percona 5.7 = ps5.7.26
+dbdeployer info version --flavor mariadb 10.4 = maria10.4.5
+dbdeployer info version --flavor mariadb 10.3 = maria10.3.15
+dbdeployer info version --flavor mariadb 10.2 = maria10.2.24
+dbdeployer info version --flavor mariadb 10.1 = maria10.1.40
+dbdeployer info version --flavor mysql 8.0 = oracle8.0.16
+dbdeployer info version --flavor mysql 5.7 = oracle5.7.26
 
-dbdeployer info version --flavor percona 5.7
-ps5.7.26
-
-dbdeployer info version --flavor mariadb 10.4
-maria10.4.5
-
-dbdeployer info version --flavor mariadb 10.3
-maria10.3.15
-
-dbdeployer info version --flavor mariadb 10.2
-maria10.2.24
-
-dbdeployer info version --flavor mariadb 10.1
-maria10.1.40
-
-dbdeployer info version --flavor mysql 8.0
-oracle8.0.16
-
-dbdeployer info version --flavor mysql 5.7
-oracle5.7.26
-
-
+---------------------------------------------------------------
 dbdeployer sandboxes
+---------------------------------------------------------------
  msb_maria10_1_40         :   single   maria10.1.40   [10140 ]      
  msb_maria10_2_24         :   single   maria10.2.24   [10224 ]      
  msb_maria10_3_15         :   single   maria10.3.15   [10315 ]      
@@ -387,13 +376,15 @@ dbdeployer sandboxes
  msb_ps5_7_26             :   single   ps5.7.26       [5727 ]       
  msb_ps8_0_15             :   single   ps8.0.15       [8015 18015 ] 
 
+---------------------------------------------------------------
 sandbox info
+---------------------------------------------------------------
 
 /root/sandboxes/msb_maria10_1_40/my sql -e '\s'
 --------------
 /root/opt/mysql/maria10.1.40/bin/mysql  Ver 15.1 Distrib 10.1.40-MariaDB, for Linux (x86_64) using readline 5.1
 
-Connection id:          14
+Connection id:          21
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -409,17 +400,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox10140.sock
-Uptime:                 18 min 11 sec
+Uptime:                 13 hours 35 min 40 sec
 
-Threads: 1  Questions: 41  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.037
+Threads: 1  Questions: 63  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.001
 --------------
 
+saving msb_maria10_1_40 variables to /home/dbdeployer/msb_maria10_1_40-variables.txt
+/root/sandboxes/msb_maria10_1_40/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_maria10_2_24/my sql -e '\s'
 --------------
 /root/opt/mysql/maria10.2.24/bin/mysql  Ver 15.1 Distrib 10.2.24-MariaDB, for Linux (x86_64) using readline 5.1
 
-Connection id:          11
+Connection id:          18
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -435,17 +429,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox10224.sock
-Uptime:                 18 min 8 sec
+Uptime:                 13 hours 35 min 37 sec
 
-Threads: 7  Questions: 21  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.019
+Threads: 7  Questions: 43  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.000
 --------------
 
+saving msb_maria10_2_24 variables to /home/dbdeployer/msb_maria10_2_24-variables.txt
+/root/sandboxes/msb_maria10_2_24/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_maria10_3_15/my sql -e '\s'
 --------------
 /root/opt/mysql/maria10.3.15/bin/mysql  Ver 15.1 Distrib 10.3.15-MariaDB, for Linux (x86_64) using readline 5.1
 
-Connection id:          11
+Connection id:          18
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -461,17 +458,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox10315.sock
-Uptime:                 18 min 5 sec
+Uptime:                 13 hours 35 min 35 sec
 
-Threads: 7  Questions: 21  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.019
+Threads: 7  Questions: 43  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.000
 --------------
 
+saving msb_maria10_3_15 variables to /home/dbdeployer/msb_maria10_3_15-variables.txt
+/root/sandboxes/msb_maria10_3_15/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_maria10_4_5/my sql -e '\s'
 --------------
 /root/opt/mysql/maria10.4.5/bin/mysql  Ver 15.1 Distrib 10.4.5-MariaDB, for Linux (x86_64) using readline 5.1
 
-Connection id:          11
+Connection id:          18
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -487,17 +487,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox10405.sock
-Uptime:                 18 min 1 sec
+Uptime:                 13 hours 35 min 31 sec
 
-Threads: 7  Questions: 21  Slow queries: 0  Opens: 19  Flush tables: 1  Open tables: 13  Queries per second avg: 0.019
+Threads: 7  Questions: 43  Slow queries: 0  Opens: 19  Flush tables: 1  Open tables: 13  Queries per second avg: 0.000
 --------------
 
+saving msb_maria10_4_5 variables to /home/dbdeployer/msb_maria10_4_5-variables.txt
+/root/sandboxes/msb_maria10_4_5/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_oracle5_7_26/my sql -e '\s'
 --------------
 /root/opt/mysql/oracle5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26, for linux-glibc2.12 (x86_64) using  EditLine wrapper
 
-Connection id:          5
+Connection id:          19
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -512,17 +515,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox5726.sock
-Uptime:                 17 min 57 sec
+Uptime:                 13 hours 35 min 27 sec
 
-Threads: 1  Questions: 29  Slow queries: 0  Opens: 111  Flush tables: 1  Open tables: 104  Queries per second avg: 0.026
+Threads: 1  Questions: 69  Slow queries: 0  Opens: 120  Flush tables: 1  Open tables: 113  Queries per second avg: 0.001
 --------------
 
+saving msb_oracle5_7_26 variables to /home/dbdeployer/msb_oracle5_7_26-variables.txt
+/root/sandboxes/msb_oracle5_7_26/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_oracle8_0_16/my sql -e '\s'
 --------------
 /root/opt/mysql/oracle8.0.16/bin/mysql  Ver 8.0.16 for linux-glibc2.12 on x86_64 (MySQL Community Server - GPL)
 
-Connection id:          11
+Connection id:          18
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -537,17 +543,20 @@ Db     characterset:    utf8mb4
 Client characterset:    utf8mb4
 Conn.  characterset:    utf8mb4
 UNIX socket:            /tmp/mysql_sandbox8016.sock
-Uptime:                 17 min 52 sec
+Uptime:                 13 hours 35 min 21 sec
 
-Threads: 2  Questions: 45  Slow queries: 0  Opens: 145  Flush tables: 3  Open tables: 46  Queries per second avg: 0.041
+Threads: 2  Questions: 71  Slow queries: 0  Opens: 164  Flush tables: 3  Open tables: 65  Queries per second avg: 0.001
 --------------
 
+saving msb_oracle8_0_16 variables to /home/dbdeployer/msb_oracle8_0_16-variables.txt
+/root/sandboxes/msb_oracle8_0_16/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_ps5_7_26/my sql -e '\s'
 --------------
 /root/opt/mysql/ps5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26-29, for Linux (x86_64) using  6.2
 
-Connection id:          5
+Connection id:          12
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -562,17 +571,20 @@ Db     characterset:    latin1
 Client characterset:    utf8
 Conn.  characterset:    utf8
 UNIX socket:            /tmp/mysql_sandbox5727.sock
-Uptime:                 17 min 23 sec
+Uptime:                 13 hours 34 min 52 sec
 
-Threads: 1  Questions: 29  Slow queries: 0  Opens: 111  Flush tables: 1  Open tables: 104  Queries per second avg: 0.027
+Threads: 1  Questions: 55  Slow queries: 0  Opens: 114  Flush tables: 1  Open tables: 107  Queries per second avg: 0.001
 --------------
 
+saving msb_ps5_7_26 variables to /home/dbdeployer/msb_ps5_7_26-variables.txt
+/root/sandboxes/msb_ps5_7_26/my sqladmin var
+---------------------------------------------------------------
 
 /root/sandboxes/msb_ps8_0_15/my sql -e '\s'
 --------------
 /root/opt/mysql/ps8.0.15/bin/mysql  Ver 8.0.15-6 for Linux on x86_64 (Percona Server (GPL), Release 6, Revision 63abd08)
 
-Connection id:          11
+Connection id:          18
 Current database:
 Current user:           msandbox@localhost
 SSL:                    Not in use
@@ -587,8 +599,12 @@ Db     characterset:    utf8mb4
 Client characterset:    utf8mb4
 Conn.  characterset:    utf8mb4
 UNIX socket:            /tmp/mysql_sandbox8015.sock
-Uptime:                 16 min 48 sec
+Uptime:                 13 hours 34 min 17 sec
 
-Threads: 2  Questions: 45  Slow queries: 0  Opens: 124  Flush tables: 2  Open tables: 100  Queries per second avg: 0.044
+Threads: 2  Questions: 71  Slow queries: 0  Opens: 142  Flush tables: 2  Open tables: 118  Queries per second avg: 0.001
 --------------
+
+saving msb_ps8_0_15 variables to /home/dbdeployer/msb_ps8_0_15-variables.txt
+/root/sandboxes/msb_ps8_0_15/my sqladmin var
+---------------------------------------------------------------
 ```

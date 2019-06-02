@@ -1,7 +1,8 @@
 #!/bin/bash
-##########################
+####################################################
 # dbdeployer setup
-##########################
+####################################################
+DBDEPLOY_HOMEDIR='/home/dbdeployer'
 INSTALL_DIR='/svr-setup'
 dbdeploy_ver=1.30.1
 percona_ver_latest=8.0.15-6
@@ -12,6 +13,12 @@ mdb_ver_two=10.2.24
 mdb_ver_one=10.1.40
 oracle_ver_latest=8.0.16
 oracle_ver=5.7.26
+####################################################
+if [ ! -d "$DBDEPLOY_HOMEDIR" ]; then
+  mkdir -p "$DBDEPLOY_HOMEDIR"
+fi
+####################################################
+# functions
 
 dbdeploy_install() {
   mode=$1
@@ -144,40 +151,52 @@ oracle_install() {
 
 cmds() {
   echo
-  echo "dbdeployer info version --flavor percona 8.0"
+  echo "---------------------------------------------------------------"
+  echo "dbdeployer installed binaries"
+  echo "---------------------------------------------------------------"
+  echo -n "dbdeployer info version --flavor percona 8.0 = "
   dbdeployer info version --flavor percona 8.0
-  echo
-  echo "dbdeployer info version --flavor percona 5.7"
+  #echo
+  echo -n "dbdeployer info version --flavor percona 5.7 = "
   dbdeployer info version --flavor percona 5.7
-  echo
-  echo "dbdeployer info version --flavor mariadb 10.4"
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.4 = "
   dbdeployer info version --flavor mariadb 10.4
-  echo
-  echo "dbdeployer info version --flavor mariadb 10.3"
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.3 = "
   dbdeployer info version --flavor mariadb 10.3
-  echo
-  echo "dbdeployer info version --flavor mariadb 10.2"
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.2 = "
   dbdeployer info version --flavor mariadb 10.2
-  echo
-  echo "dbdeployer info version --flavor mariadb 10.1"
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.1 = "
   dbdeployer info version --flavor mariadb 10.1
-  echo
-  echo "dbdeployer info version --flavor mysql 8.0"
+  #echo
+  echo -n "dbdeployer info version --flavor mysql 8.0 = "
   dbdeployer info version --flavor mysql 8.0
-  echo
-  echo "dbdeployer info version --flavor mysql 5.7"
+  #echo
+  echo -n "dbdeployer info version --flavor mysql 5.7 = "
   dbdeployer info version --flavor mysql 5.7
-  echo
+  #echo
   if [[ "$(dbdeployer sandboxes)" ]]; then
     echo
+    echo "---------------------------------------------------------------"
     echo "dbdeployer sandboxes"
+    echo "---------------------------------------------------------------"
     dbdeployer sandboxes
     echo
+    echo "---------------------------------------------------------------"
     echo "sandbox info"
+    echo "---------------------------------------------------------------"
     dbdeployer sandboxes | awk '{print $1}' | while read d; do
       echo
       echo "/root/sandboxes/$d/my sql -e '\s'"
       /root/sandboxes/$d/my sql -e '\s'
+      # echo
+      echo "saving $d variables to $DBDEPLOY_HOMEDIR/${d}-variables.txt"
+      echo "/root/sandboxes/$d/my sqladmin var"
+      /root/sandboxes/$d/my sqladmin var | tr -s ' ' | sed -e 's|+-||g' -e 's|-+||g' -e 's|--||g' > "$DBDEPLOY_HOMEDIR/${d}-variables.txt"
+      echo "---------------------------------------------------------------"
     done
   fi
 }
