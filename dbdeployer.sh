@@ -163,8 +163,8 @@ cmds() {
   echo -n "dbdeployer info version --flavor percona 5.7 = "
   dbdeployer info version --flavor percona 5.7
   #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.11 = "
-  dbdeployer info version --flavor mariadb 10.11
+  # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
+  # dbdeployer info version --flavor mariadb 10.11
   #echo
   echo -n "dbdeployer info version --flavor mariadb 10.10 = "
   dbdeployer info version --flavor mariadb 10.10
