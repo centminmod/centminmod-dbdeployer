@@ -3,6 +3,7 @@
 # dbdeployer setup
 ####################################################
 DEBUG=n
+DBDEPLOY_PARENT_DIR='/root/opt/mysql'
 DBDEPLOY_HOMEDIR='/home/dbdeployer'
 INSTALL_DIR='/svr-setup'
 dbdeploy_ver=1.69.2
@@ -37,7 +38,7 @@ if [ ! -f /usr/lib/libncurses.so ]; then
   yum -q -y install ncurses-devel ncurses
 fi
 if [ ! -f /usr/lib64/libaio.so ]; then
-  yum -q -y install libaio-devel
+  yum -q -y install libaio-devel libaio numactl-libs ncurses-compat-libs procps
 fi
 if [[ "$DBEUG" = [yY] ]]; then
   VERBOSE_OPT=' --verbosity 1'
@@ -64,7 +65,7 @@ dbdeploy_install() {
     mv -f dbdeployer-${dbdeploy_ver}.linux /usr/local/bin/dbdeployer
     chown root:root /usr/local/bin/dbdeployer
   fi
-  mkdir -p /root/opt/mysql
+  mkdir -p "$DBDEPLOY_PARENT_DIR"
   echo
   echo "dbdeployer defaults show"
   dbdeployer defaults show
@@ -81,31 +82,37 @@ dbdeploy_install() {
 
 percona_install() {
   GLIBC_VER=$(rpm -qa glibc | awk -F '-' '{print $2}' | head -n1)
-  echo
-  echo "installing Percona binary tarballs"
-  cd "$INSTALL_DIR"
-  wget -4 -q https://downloads.percona.com/downloads/Percona-Server-LATEST/Percona-Server-${percona_ver_latest}/binary/tarball/Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-  dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-  # pushd /root/sandboxes/msb_ps8_0_15
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  percona_ver_latest_short=$(echo "$percona_ver_latest" | awk -F '-' '{print $1}')
+  percona_ver_short=$(echo "$percona_ver" | awk -F '-' '{print $1}')
+  if [ ! -d "${DBDEPLOY_PARENT_DIR}/ps${percona_ver_latest_short}" ]; then
+    echo
+    echo "installing Percona binary tarballs"
+    cd "$INSTALL_DIR"
+    wget -4 -q https://downloads.percona.com/downloads/Percona-Server-LATEST/Percona-Server-${percona_ver_latest}/binary/tarball/Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+    # pushd /root/sandboxes/msb_ps8_0_15
+    # ./my sqladmin var | tr -s ' '
+    # ./my sql -e '\s'
+    # ./metadata help
+    # ./metadata version
+    # ./metadata flavor
+    # popd
+  fi
 
-  GLIBC_VER=2.17
-  wget -4 -q https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-  dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-  echo "dbdeployer versions"
-  dbdeployer versions
-  # pushd /root/sandboxes/msb_ps5.7.26
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  if [ ! -d "${DBDEPLOY_PARENT_DIR}/ps${percona_ver_short}" ]; then
+    GLIBC_VER=2.17
+    wget -4 -q https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+    echo "dbdeployer versions"
+    dbdeployer versions
+    # pushd /root/sandboxes/msb_ps5.7.26
+    # ./my sqladmin var | tr -s ' '
+    # ./my sql -e '\s'
+    # ./metadata help
+    # ./metadata version
+    # ./metadata flavor
+    # popd
+  fi
 }
 
 
@@ -116,46 +123,64 @@ mariadb_install() {
   mdb_ver_array=("${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}")
 
   for mdb_v in "${mdb_ver_array[@]}"; do
-    cd "$INSTALL_DIR"
-    wget -4 -q https://${MARIADB_MIRROR}/mariadb/mariadb-${mdb_v}/bintar-linux-systemd-x86_64/mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz -O mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
-    dbdeployer unpack${VERBOSE_OPT} --prefix=maria mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
-    # pushd /root/sandboxes/msb_maria${mdb_v}
-    # ./my sqladmin var | tr -s ' '
-    # ./my sql -e '\s'
-    # ./metadata help
-    # ./metadata version
-    # ./metadata flavor
-    # popd
+    if [ ! -d "${DBDEPLOY_PARENT_DIR}/maria${mdb_v}" ]; then
+      cd "$INSTALL_DIR"
+      wget -4 -q https://${MARIADB_MIRROR}/mariadb/mariadb-${mdb_v}/bintar-linux-systemd-x86_64/mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz -O mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
+      dbdeployer unpack${VERBOSE_OPT} --prefix=maria mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
+      # pushd /root/sandboxes/msb_maria${mdb_v}
+      # ./my sqladmin var | tr -s ' '
+      # ./my sql -e '\s'
+      # ./metadata help
+      # ./metadata version
+      # ./metadata flavor
+      # popd
+    fi
   done
   echo "dbdeployer versions"
   dbdeployer versions
 }
 
 oracle_install() {
-  echo
-  echo "installing Oracle MySQL binary tarballs"
-  cd "$INSTALL_DIR"
-  wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
-  dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
-  # pushd /root/sandboxes/msb_oracle8.0.16
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  if [ ! -d "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}" ]; then
+    echo
+    echo "installing Oracle MySQL binary tarballs"
+    cd "$INSTALL_DIR"
+    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
+    # pushd /root/sandboxes/msb_oracle8.0.16
+    # ./my sqladmin var | tr -s ' '
+    # ./my sql -e '\s'
+    # ./metadata help
+    # ./metadata version
+    # ./metadata flavor
+    # popd
+  fi
 
-  wget -4 -q https://downloads.mysql.com/archives/get/p/23/file/mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz -O mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
-  dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
-  # pushd /root/sandboxes/msb_oracle5.7.26
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  if [ ! -d "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver}" ]; then
+    wget -4 -q https://downloads.mysql.com/archives/get/p/23/file/mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz -O mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
+    # pushd /root/sandboxes/msb_oracle5.7.26
+    # ./my sqladmin var | tr -s ' '
+    # ./my sql -e '\s'
+    # ./metadata help
+    # ./metadata version
+    # ./metadata flavor
+    # popd
+  fi
   echo "dbdeployer versions"
   dbdeployer versions
+}
+
+oracle_shell() {
+  if [ ! -f "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh" ]; then
+    echo
+    echo "installing Oracle MySQL Shell"
+    cd "$INSTALL_DIR"
+    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-Shell/mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz -O mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
+    dbdeployer unpack${VERBOSE_OPT} --shell --prefix=oracle mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
+  elif [ -f "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh" ]; then
+    echo "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh already installed"
+  fi
 }
 
 cmds() {
@@ -247,6 +272,17 @@ resetall() {
   done
 }
 
+wipeall() {
+  echo
+  echo "wipe and restart"
+  echo
+  dbdeployer sandboxes | awk '{print $1}' | while read b; do
+    echo
+    echo "/root/sandboxes/$b/wipe_and_restart"
+    /root/sandboxes/$b/wipe_and_restart
+  done
+}
+
 resetbins() {
   echo
   echo "resetting bins"
@@ -262,6 +298,12 @@ resetbins() {
 }
 
 install_bins() {
+  forced=$1
+  if [[ "$forced" = force ]]; then
+    force_opt=' --force'
+  else
+    force_opt=""
+  fi
   echo "dbdeployer deploy single sandboxes"
   dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
   declare -a arrays
@@ -269,8 +311,8 @@ install_bins() {
   for b in "${arrays[@]}"; do
     echo
     echo "creating $b single sandbox instance"
-    echo "dbdeployer deploy single $b --skip-library-check"
-    dbdeployer deploy single $b --skip-library-check
+    echo "dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir"
+    dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir
   done
   echo
   echo "dbdeployer sandboxes"
@@ -290,10 +332,14 @@ case "$1" in
     percona_install
     mariadb_install
     oracle_install
+    oracle_shell
     cmds
     ;;
   update )
     dbdeploy_install update
+    ;;
+  wipe )
+    wipeall
     ;;
   reset )
     resetall
@@ -307,10 +353,13 @@ case "$1" in
   install-sandboxes )
     install_bins
     ;;
+  install-sandboxes-force )
+    install_bins force
+    ;;
   * )
     echo
     echo "usage:"
     echo
-    echo "$0 {install|update|reset|reset-binary|check|install-sandboxes}"
+    echo "$0 {install|update|wipe|reset|reset-binary|check|install-sandboxes|install-sandboxes-force}"
     ;;
 esac
