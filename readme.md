@@ -17,11 +17,11 @@
 ## for dbdeployer.sh
 
 ```
-./dbdeployer.sh 
+./dbdeployer.sh
 
 usage:
 
-./dbdeployer.sh {install|update|reset|check|install-sandboxes}
+./dbdeployer.sh {install|update|reset|reset-binary|check|install-sandboxes}
 ```
 
 ## for dbdeployer binary

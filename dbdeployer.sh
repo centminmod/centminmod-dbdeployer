@@ -33,6 +33,12 @@ fi
 if [ ! -f /usr/bin/tar ]; then
   yum -q -y install tar
 fi
+if [ ! -f /usr/lib/libncurses.so ]; then
+  yum -q -y install ncurses-devel ncurses
+fi
+if [ ! -f /usr/lib64/libaio.so ]; then
+  yum -q -y install libaio-devel
+fi
 if [[ "$DBEUG" = [yY] ]]; then
   VERBOSE_OPT=' --verbosity 1'
 else
@@ -241,6 +247,20 @@ resetall() {
   done
 }
 
+resetbins() {
+  echo
+  echo "resetting bins"
+  echo
+  dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
+  declare -a arrays
+  arrays=(${dbdeploy_bins})
+  for b in "${arrays[@]}"; do
+    echo
+    echo "dbdeployer delete-binaries $b"
+    echo y | dbdeployer delete-binaries $b
+  done
+}
+
 install_bins() {
   echo "dbdeployer deploy single sandboxes"
   dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
@@ -278,6 +298,9 @@ case "$1" in
   reset )
     resetall
     ;;
+  reset-binary )
+    resetbins
+    ;;
   check )
     cmds
     ;;
@@ -288,6 +311,6 @@ case "$1" in
     echo
     echo "usage:"
     echo
-    echo "$0 {install|update|reset|check|install-sandboxes}"
+    echo "$0 {install|update|reset|reset-binary|check|install-sandboxes}"
     ;;
 esac
