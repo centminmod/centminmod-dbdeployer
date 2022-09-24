@@ -37,18 +37,23 @@ Usage:
 Available Commands:
   admin           sandbox management tasks
   cookbook        Shows dbdeployer samples
+  data-load       tasks related to dbdeployer data loading
   defaults        tasks related to dbdeployer defaults
   delete          delete an installed sandbox
   delete-binaries delete an expanded tarball
   deploy          deploy sandboxes
+  downloads       Manages remote tarballs
   export          Exports the command structure in JSON format
   global          Runs a given command in every sandbox
   help            Help about any command
+  import          imports one or more MySQL servers into a sandbox
   info            Shows information about dbdeployer environment samples
-  remote          Manages remote tarballs
+  init            initializes dbdeployer environment
   sandboxes       List installed sandboxes
   unpack          unpack a tarball into the binary directory
+  update          Gets dbdeployer newest version
   usage           Shows usage of installed sandboxes
+  use             uses a sandbox
   versions        List available versions
 
 Flags:
@@ -56,7 +61,9 @@ Flags:
   -h, --help                    help for dbdeployer
       --sandbox-binary string   Binary repository (default "/root/opt/mysql")
       --sandbox-home string     Sandbox deployment directory (default "/root/sandboxes")
-      --version                 version for dbdeployer
+      --shell-path string       Path to Bash, used for generated scripts (default "/usr/bin/bash")
+      --skip-library-check      Skip check for needed libraries (may cause nasty errors)
+  -v, --version                 version for dbdeployer
 
 Use "dbdeployer [command] --help" for more information about a command.
 ```
@@ -67,24 +74,24 @@ Use "dbdeployer [command] --help" for more information about a command.
 ./dbdeployer.sh install
 ```
 
-Install sandbox singles for Oracle MySQL 5.7, 8.0, MariaDB 10.1, 10.2, 10.3, 10.4 and Percona 5.7 and 8.0.
+Install sandbox singles for Oracle MySQL 5.7, 8.0, MariaDB 10.3 to 10.10 and Percona 5.7 and 8.0.
 
 ```
-
-./dbdeployer.sh install                 
+./dbdeployer.sh install
 
 installing dbdeployer
 
 dbdeployer defaults show
 # Internal values:
 {
-        "version": "1.30.0",
+        "version": "1.66.0",
         "sandbox-home": "$HOME/sandboxes",
         "sandbox-binary": "$HOME/opt/mysql",
         "use-sandbox-catalog": true,
         "log-sb-operations": false,
         "log-directory": "/root/sandboxes/logs",
         "cookbook-directory": "recipes",
+        "shell-path": "/usr/bin/bash",
         "master-slave-base-port": 11000,
         "group-replication-base-port": 12000,
         "group-replication-sp-base-port": 13000,
@@ -103,6 +110,7 @@ dbdeployer defaults show
         "slave-prefix": "slave",
         "slave-abbr": "s",
         "sandbox-prefix": "msb_",
+        "imported-sandbox-prefix": "imp_msb_",
         "master-slave-prefix": "rsandbox_",
         "group-prefix": "group_msb_",
         "group-sp-prefix": "group_sp_msb_",
@@ -112,25 +120,32 @@ dbdeployer defaults show
         "reserved-ports": [
                 1186,
                 3306,
+                5432,
                 33060,
                 33062
         ],
         "remote-repository": "https://raw.githubusercontent.com/datacharmer/mysql-docker-minimal/master/dbdata",
         "remote-index-file": "available.json",
+        "remote-completion-url": "https://raw.githubusercontent.com/datacharmer/dbdeployer/master/docs/dbdeployer_completion.sh",
+        "remote-tarball-url": "https://raw.githubusercontent.com/datacharmer/dbdeployer/master/downloads/tarball_list.json",
         "pxc-prefix": "pxc_msb_",
         "ndb-prefix": "ndb_msb_",
-        "timestamp": "Sat Jun  1 15:06:44 UTC 2019"
+        "default-sandbox-executable": "default",
+        "download-name-linux": "mysql-{{.Version}}-linux-glibc2.17-x86_64{{.Minimal}}.{{.Ext}}",
+        "download-name-macos": "mysql-{{.Version}}-macos11-x86_64.{{.Ext}}",
+        "download-url": "https://dev.mysql.com/get/Downloads/MySQL",
+        "timestamp": "Sat Sep 24 04:23:31 UTC 2022"
  }
 
 dbdeployer remote list
 Files available in https://raw.githubusercontent.com/datacharmer/mysql-docker-minimal/master/dbdata/available.json
+5.6 -> [mysql-5.6.43 mysql-5.6.44]
+5.7 -> [mysql-5.7.25 mysql-5.7.26]
 8.0 -> [mysql-8.0.15 mysql-8.0.16]
 4.1 -> [mysql-4.1.22]
 5.0 -> [mysql-5.0.15 mysql-5.0.96]
 5.1 -> [mysql-5.1.72]
 5.5 -> [mysql-5.5.61 mysql-5.5.62]
-5.6 -> [mysql-5.6.43 mysql-5.6.44]
-5.7 -> [mysql-5.7.25 mysql-5.7.26]
 
 dbdeployer -h
 dbdeployer makes MySQL server installation an easy task.
@@ -142,18 +157,23 @@ Usage:
 Available Commands:
   admin           sandbox management tasks
   cookbook        Shows dbdeployer samples
+  data-load       tasks related to dbdeployer data loading
   defaults        tasks related to dbdeployer defaults
   delete          delete an installed sandbox
   delete-binaries delete an expanded tarball
   deploy          deploy sandboxes
+  downloads       Manages remote tarballs
   export          Exports the command structure in JSON format
   global          Runs a given command in every sandbox
   help            Help about any command
+  import          imports one or more MySQL servers into a sandbox
   info            Shows information about dbdeployer environment samples
-  remote          Manages remote tarballs
+  init            initializes dbdeployer environment
   sandboxes       List installed sandboxes
   unpack          unpack a tarball into the binary directory
+  update          Gets dbdeployer newest version
   usage           Shows usage of installed sandboxes
+  use             uses a sandbox
   versions        List available versions
 
 Flags:
@@ -161,76 +181,72 @@ Flags:
   -h, --help                    help for dbdeployer
       --sandbox-binary string   Binary repository (default "/root/opt/mysql")
       --sandbox-home string     Sandbox deployment directory (default "/root/sandboxes")
-      --version                 version for dbdeployer
+      --shell-path string       Path to Bash, used for generated scripts (default "/usr/bin/bash")
+      --skip-library-check      Skip check for needed libraries (may cause nasty errors)
+  -v, --version                 version for dbdeployer
 
 Use "dbdeployer [command] --help" for more information about a command.
 
 dbdeployer --version
-dbdeployer version 1.30.1
+dbdeployer version 1.69.2
 
 installing Percona binary tarballs
-Unpacking tarball Percona-Server-8.0.15-6-Linux.x86_64.ssl.tar.gz to $HOME/opt/mysql/ps8.0.15
-.........100..................15900.........16000.........16100.........16200.........16300.........16400.........16500.........16600.........16700.........16800.........16900.........17000.........17100.........17200.........17300.........17400.........17500.........17600.........17700.........17800.........17900.........18000.........18100.........18200.........18300.........18400.........18500.........18600.........18700.........18800.........18900.........19000.........19100.........19200.........19300.........19400.........19500.........19600.........19700.........19800.........19900.........20000.........20100.........20200.........20300.........20400.........20500.........20600.........20700.........20800.........20900.........21000.........21100.........21200.........21300.........21400.........21500..21521
-Renaming directory /root/opt/mysql/Percona-Server-8.0.15-6-Linux.x86_64.ssl to /root/opt/mysql/ps8.0.15
-Unpacking tarball Percona-Server-5.7.26-29-Linux.x86_64.ssl101.tar.gz to $HOME/opt/mysql/ps5.7.26
-.........100..................15900.........16000.........16100.........16200.........16300.........16400.........16500.........16600.........16700.........16800.........16900.........17000.........17100.........17200.........17300.........17400.........17500.........17600.........17700.........17800.........17900.........18000.........18100.........18200.........18300.........18400.........18500.........18600.........18700.........18800.........18900.........19000.........19100.........19200.......19275
-Renaming directory /root/opt/mysql/Percona-Server-5.7.26-29-Linux.x86_64.ssl101 to /root/opt/mysql/ps5.7.26
+Unpacking tarball Percona-Server-8.0.29-21-Linux.x86_64.glibc2.28-minimal.tar.gz to $HOME/opt/mysql/ps8.0.29
+Renaming directory /root/opt/mysql/Percona-Server-8.0.29-21-Linux.x86_64.glibc2.28-minimal to /root/opt/mysql/ps8.0.29
+Unpacking tarball Percona-Server-5.7.39-42-Linux.x86_64.glibc2.17-minimal.tar.gz to $HOME/opt/mysql/ps5.7.39
+Renaming directory /root/opt/mysql/Percona-Server-5.7.39-42-Linux.x86_64.glibc2.17-minimal to /root/opt/mysql/ps5.7.39
+dbdeployer versions
 Basedir: /root/opt/mysql
-ps5.7.26  ps8.0.15  
+ps5.7.39  ps8.0.29  
 
 installing MariaDB binary tarballs
-Unpacking tarball mariadb-10.4.5-linux-glibc_214-x86_64.tar.gz to $HOME/opt/mysql/maria10.4.5
-.........100..................15900.........16000.........16100.........16200.........16300.........16400.........16500.........16600.........16700.........16800.........16900.........17000.........17100.........17200.........17300.........17400.........17500.........17599
-Renaming directory /root/opt/mysql/mariadb-10.4.5-linux-glibc_214-x86_64 to /root/opt/mysql/maria10.4.5
-Unpacking tarball mariadb-10.3.15-linux-x86_64.tar.gz to $HOME/opt/mysql/maria10.3.15
-.........100..................15900.........16000.........16100.........16200.........16300.........16400.........16500.........16600.........16700.........16800.........16900.........17000...17031
-Renaming directory /root/opt/mysql/mariadb-10.3.15-linux-x86_64 to /root/opt/mysql/maria10.3.15
-Unpacking tarball mariadb-10.2.24-linux-x86_64.tar.gz to $HOME/opt/mysql/maria10.2.24
-.........100..................15000.........15100.........15200.....15259
-Renaming directory /root/opt/mysql/mariadb-10.2.24-linux-x86_64 to /root/opt/mysql/maria10.2.24
-Unpacking tarball mariadb-10.1.40-linux-x86_64.tar.gz to $HOME/opt/mysql/maria10.1.40
-.........100..................13900.........14000.........14100.........14200.........14300.........14400.........14500....14546
-Renaming directory /root/opt/mysql/mariadb-10.1.40-linux-x86_64 to /root/opt/mysql/maria10.1.40
+Unpacking tarball mariadb-10.10.1-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.10.1
+Renaming directory /root/opt/mysql/mariadb-10.10.1-linux-systemd-x86_64 to /root/opt/mysql/maria10.10.1
+Unpacking tarball mariadb-10.9.3-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.9.3
+Renaming directory /root/opt/mysql/mariadb-10.9.3-linux-systemd-x86_64 to /root/opt/mysql/maria10.9.3
+Unpacking tarball mariadb-10.8.5-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.8.5
+Renaming directory /root/opt/mysql/mariadb-10.8.5-linux-systemd-x86_64 to /root/opt/mysql/maria10.8.5
+Unpacking tarball mariadb-10.7.6-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.7.6
+Renaming directory /root/opt/mysql/mariadb-10.7.6-linux-systemd-x86_64 to /root/opt/mysql/maria10.7.6
+Unpacking tarball mariadb-10.6.10-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.6.10
+Renaming directory /root/opt/mysql/mariadb-10.6.10-linux-systemd-x86_64 to /root/opt/mysql/maria10.6.10
+Unpacking tarball mariadb-10.5.17-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.5.17
+Renaming directory /root/opt/mysql/mariadb-10.5.17-linux-systemd-x86_64 to /root/opt/mysql/maria10.5.17
+Unpacking tarball mariadb-10.4.26-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.4.26
+Renaming directory /root/opt/mysql/mariadb-10.4.26-linux-systemd-x86_64 to /root/opt/mysql/maria10.4.26
+Unpacking tarball mariadb-10.3.36-linux-systemd-x86_64.tar.gz to $HOME/opt/mysql/maria10.3.36
+Renaming directory /root/opt/mysql/mariadb-10.3.36-linux-systemd-x86_64 to /root/opt/mysql/maria10.3.36
+dbdeployer versions
 Basedir: /root/opt/mysql
-maria10.1.40  maria10.2.24  maria10.3.15  maria10.4.5   ps5.7.26      ps8.0.15      
-
+maria10.10.1  maria10.3.36  maria10.4.26  maria10.5.17  maria10.6.10  maria10.7.6   
+maria10.8.5   maria10.9.3   ps5.7.39      ps8.0.29      
 
 installing Oracle MySQL binary tarballs
-file '/svr-setup/mysql-8.0.16.tar.xz' already exists
-Unpacking tarball mysql-8.0.16.tar.xz to $HOME/opt/mysql/oracle8.0.16
-........85
-Renaming directory /root/opt/mysql/mysql-8.0.16 to /root/opt/mysql/oracle8.0.16
-file '/svr-setup/mysql-5.7.26.tar.xz' already exists
-Unpacking tarball mysql-5.7.26.tar.xz to $HOME/opt/mysql/oracle5.7.26
-.........99
-Renaming directory /root/opt/mysql/mysql-5.7.26 to /root/opt/mysql/oracle5.7.26
+Unpacking tarball mysql-8.0.30-linux-glibc2.17-x86_64-minimal.tar.xz to $HOME/opt/mysql/oracle8.0.30
+Renaming directory /root/opt/mysql/mysql-8.0.30-linux-glibc2.17-x86_64-minimal to /root/opt/mysql/oracle8.0.30
+Unpacking tarball mysql-5.7.38-linux-glibc2.12-x86_64.tar.gz to $HOME/opt/mysql/oracle5.7.38
+Renaming directory /root/opt/mysql/mysql-5.7.38-linux-glibc2.12-x86_64 to /root/opt/mysql/oracle5.7.38
+dbdeployer versions
 Basedir: /root/opt/mysql
-maria10.1.40  maria10.2.24  maria10.3.15  maria10.4.5   oracle5.7.26  oracle8.0.16  
-ps5.7.26      ps8.0.15      
+maria10.10.1  maria10.3.36  maria10.4.26  maria10.5.17  maria10.6.10  maria10.7.6   
+maria10.8.5   maria10.9.3   oracle5.7.38  oracle8.0.30  ps5.7.39      ps8.0.29      
 
-dbdeployer info version --flavor percona 8.0
-ps8.0.15
 
-dbdeployer info version --flavor percona 5.7
-ps5.7.26
-
-dbdeployer info version --flavor mariadb 10.4
-maria10.4.5
-
-dbdeployer info version --flavor mariadb 10.3
-maria10.3.15
-
-dbdeployer info version --flavor mariadb 10.2
-maria10.2.24
-
-dbdeployer info version --flavor mariadb 10.1
-maria10.1.40
-
-dbdeployer info version --flavor mysql 8.0
-oracle8.0.16
-
-dbdeployer info version --flavor mysql 5.7
-oracle5.7.26
+---------------------------------------------------------------
+dbdeployer installed binaries
+---------------------------------------------------------------
+dbdeployer info version --flavor percona 8.0 = ps8.0.29
+dbdeployer info version --flavor percona 5.7 = ps5.7.39
+dbdeployer info version --flavor mariadb 10.11 = dbdeployer info version --flavor mariadb 10.10 = maria10.10.1
+dbdeployer info version --flavor mariadb 10.9 = maria10.9.3
+dbdeployer info version --flavor mariadb 10.8 = maria10.8.5
+dbdeployer info version --flavor mariadb 10.7 = maria10.7.6
+dbdeployer info version --flavor mariadb 10.6 = maria10.6.10
+dbdeployer info version --flavor mariadb 10.5 = maria10.5.17
+dbdeployer info version --flavor mariadb 10.4 = maria10.4.26
+dbdeployer info version --flavor mariadb 10.3 = maria10.3.36
+dbdeployer info version --flavor mysql 8.0 = oracle8.0.30
+dbdeployer info version --flavor mysql 5.7 = oracle5.7.38
 ```
 
 # Reset
@@ -242,369 +258,34 @@ Delete and remove all dbdeployer sandboxes and binaries for a fresh start.
 ```
 
 ```
-./dbdeployer.sh reset
 
-resetting all
-
-dbdeployer delete all
-Nothing to delete in /root/sandboxes
-
-dbdeployer delete-binaries maria10.1.40
-Do you want to delete maria10.1.40? y/[N] Proceeding with deletion
-Directory maria10.1.40 removed
-
-dbdeployer delete-binaries maria10.2.24
-Do you want to delete maria10.2.24? y/[N] Proceeding with deletion
-Directory maria10.2.24 removed
-
-dbdeployer delete-binaries maria10.3.15
-Do you want to delete maria10.3.15? y/[N] Proceeding with deletion
-Directory maria10.3.15 removed
-
-dbdeployer delete-binaries maria10.4.5
-Do you want to delete maria10.4.5? y/[N] Proceeding with deletion
-Directory maria10.4.5 removed
-
-dbdeployer delete-binaries oracle5.7.26
-Do you want to delete oracle5.7.26? y/[N] Proceeding with deletion
-Directory oracle5.7.26 removed
-
-dbdeployer delete-binaries oracle8.0.16
-Do you want to delete oracle8.0.16? y/[N] Proceeding with deletion
-Directory oracle8.0.16 removed
-
-dbdeployer delete-binaries ps5.7.26
-Do you want to delete ps5.7.26? y/[N] Proceeding with deletion
-Directory ps5.7.26 removed
-
-dbdeployer delete-binaries ps8.0.15
-Do you want to delete ps8.0.15? y/[N] Proceeding with deletion
-Directory ps8.0.15 removed
 ```
 
 # Deploy Single Sandbox Instances
 
 ```
 ./dbdeployer.sh install-sandboxes
-dbdeployer deploy single sandboxes
 
-creating maria10.1.40 single sandbox instance
-dbdeployer deploy single maria10.1.40
-Database installed in $HOME/sandboxes/msb_maria10_1_40
-run 'dbdeployer usage single' for basic instructions'
-. sandbox server started
-
-creating maria10.2.24 single sandbox instance
-dbdeployer deploy single maria10.2.24
-Database installed in $HOME/sandboxes/msb_maria10_2_24
-run 'dbdeployer usage single' for basic instructions'
-. sandbox server started
-
-creating maria10.3.15 single sandbox instance
-dbdeployer deploy single maria10.3.15
-Database installed in $HOME/sandboxes/msb_maria10_3_15
-run 'dbdeployer usage single' for basic instructions'
-. sandbox server started
-
-creating maria10.4.5 single sandbox instance
-dbdeployer deploy single maria10.4.5
-Database installed in $HOME/sandboxes/msb_maria10_4_5
-run 'dbdeployer usage single' for basic instructions'
-. sandbox server started
-
-creating oracle5.7.26 single sandbox instance
-dbdeployer deploy single oracle5.7.26
-Database installed in $HOME/sandboxes/msb_oracle5_7_26
-run 'dbdeployer usage single' for basic instructions'
-. sandbox server started
-
-creating oracle8.0.16 single sandbox instance
-dbdeployer deploy single oracle8.0.16
-Database installed in $HOME/sandboxes/msb_oracle8_0_16
-run 'dbdeployer usage single' for basic instructions'
-............... sandbox server started
-
-creating ps5.7.26 single sandbox instance
-dbdeployer deploy single ps5.7.26
-Database installed in $HOME/sandboxes/msb_ps5_7_26
-run 'dbdeployer usage single' for basic instructions'
-... sandbox server started
-
-creating ps8.0.15 single sandbox instance
-dbdeployer deploy single ps8.0.15
-Database installed in $HOME/sandboxes/msb_ps8_0_15
-run 'dbdeployer usage single' for basic instructions'
-............. sandbox server started
-
-dbdeployer sandboxes
- msb_maria10_1_40         :   single   maria10.1.40   [10140 ]      
- msb_maria10_2_24         :   single   maria10.2.24   [10224 ]      
- msb_maria10_3_15         :   single   maria10.3.15   [10315 ]      
- msb_maria10_4_5          :   single   maria10.4.5    [10405 ]      
- msb_oracle5_7_26         :   single   oracle5.7.26   [5726 ]       
- msb_oracle8_0_16         :   single   oracle8.0.16   [8016 18016 ] 
- msb_ps5_7_26             :   single   ps5.7.26       [5727 ]       
- msb_ps8_0_15             :   single   ps8.0.15       [8015 18015 ] 
 ```
 
 # Check
 
 ```
-./dbdeployer.sh check                   
+./dbdeployer.sh check
 
 ---------------------------------------------------------------
 dbdeployer installed binaries
 ---------------------------------------------------------------
-dbdeployer info version --flavor percona 8.0 = ps8.0.15
-dbdeployer info version --flavor percona 5.7 = ps5.7.26
-dbdeployer info version --flavor mariadb 10.4 = maria10.4.5
-dbdeployer info version --flavor mariadb 10.3 = maria10.3.15
-dbdeployer info version --flavor mariadb 10.2 = maria10.2.24
-dbdeployer info version --flavor mariadb 10.1 = maria10.1.40
-dbdeployer info version --flavor mysql 8.0 = oracle8.0.16
-dbdeployer info version --flavor mysql 5.7 = oracle5.7.26
-
----------------------------------------------------------------
-dbdeployer sandboxes
----------------------------------------------------------------
- msb_maria10_1_40         :   single   maria10.1.40   [10140 ]      
- msb_maria10_2_24         :   single   maria10.2.24   [10224 ]      
- msb_maria10_3_15         :   single   maria10.3.15   [10315 ]      
- msb_maria10_4_5          :   single   maria10.4.5    [10405 ]      
- msb_oracle5_7_26         :   single   oracle5.7.26   [5726 ]       
- msb_oracle8_0_16         :   single   oracle8.0.16   [8016 18016 ] 
- msb_ps5_7_26             :   single   ps5.7.26       [5727 ]       
- msb_ps8_0_15             :   single   ps8.0.15       [8015 18015 ] 
-
----------------------------------------------------------------
-sandbox info
----------------------------------------------------------------
-
-/root/sandboxes/msb_maria10_1_40/my sql -e '\s'
---------------
-/root/opt/mysql/maria10.1.40/bin/mysql  Ver 15.1 Distrib 10.1.40-MariaDB, for Linux (x86_64) using readline 5.1
-
-Connection id:          21
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server:                 MariaDB
-Server version:         10.1.40-MariaDB MariaDB Server
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox10140.sock
-Uptime:                 13 hours 35 min 40 sec
-
-Threads: 1  Questions: 63  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.001
---------------
-
-saving msb_maria10_1_40 variables to /home/dbdeployer/msb_maria10_1_40-variables.txt
-/root/sandboxes/msb_maria10_1_40/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_maria10_2_24/my sql -e '\s'
---------------
-/root/opt/mysql/maria10.2.24/bin/mysql  Ver 15.1 Distrib 10.2.24-MariaDB, for Linux (x86_64) using readline 5.1
-
-Connection id:          18
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server:                 MariaDB
-Server version:         10.2.24-MariaDB MariaDB Server
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox10224.sock
-Uptime:                 13 hours 35 min 37 sec
-
-Threads: 7  Questions: 43  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.000
---------------
-
-saving msb_maria10_2_24 variables to /home/dbdeployer/msb_maria10_2_24-variables.txt
-/root/sandboxes/msb_maria10_2_24/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_maria10_3_15/my sql -e '\s'
---------------
-/root/opt/mysql/maria10.3.15/bin/mysql  Ver 15.1 Distrib 10.3.15-MariaDB, for Linux (x86_64) using readline 5.1
-
-Connection id:          18
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server:                 MariaDB
-Server version:         10.3.15-MariaDB MariaDB Server
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox10315.sock
-Uptime:                 13 hours 35 min 35 sec
-
-Threads: 7  Questions: 43  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 0.000
---------------
-
-saving msb_maria10_3_15 variables to /home/dbdeployer/msb_maria10_3_15-variables.txt
-/root/sandboxes/msb_maria10_3_15/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_maria10_4_5/my sql -e '\s'
---------------
-/root/opt/mysql/maria10.4.5/bin/mysql  Ver 15.1 Distrib 10.4.5-MariaDB, for Linux (x86_64) using readline 5.1
-
-Connection id:          18
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server:                 MariaDB
-Server version:         10.4.5-MariaDB MariaDB Server
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox10405.sock
-Uptime:                 13 hours 35 min 31 sec
-
-Threads: 7  Questions: 43  Slow queries: 0  Opens: 19  Flush tables: 1  Open tables: 13  Queries per second avg: 0.000
---------------
-
-saving msb_maria10_4_5 variables to /home/dbdeployer/msb_maria10_4_5-variables.txt
-/root/sandboxes/msb_maria10_4_5/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_oracle5_7_26/my sql -e '\s'
---------------
-/root/opt/mysql/oracle5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26, for linux-glibc2.12 (x86_64) using  EditLine wrapper
-
-Connection id:          19
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server version:         5.7.26 MySQL Community Server (GPL)
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox5726.sock
-Uptime:                 13 hours 35 min 27 sec
-
-Threads: 1  Questions: 69  Slow queries: 0  Opens: 120  Flush tables: 1  Open tables: 113  Queries per second avg: 0.001
---------------
-
-saving msb_oracle5_7_26 variables to /home/dbdeployer/msb_oracle5_7_26-variables.txt
-/root/sandboxes/msb_oracle5_7_26/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_oracle8_0_16/my sql -e '\s'
---------------
-/root/opt/mysql/oracle8.0.16/bin/mysql  Ver 8.0.16 for linux-glibc2.12 on x86_64 (MySQL Community Server - GPL)
-
-Connection id:          18
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server version:         8.0.16 MySQL Community Server - GPL
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    utf8mb4
-Db     characterset:    utf8mb4
-Client characterset:    utf8mb4
-Conn.  characterset:    utf8mb4
-UNIX socket:            /tmp/mysql_sandbox8016.sock
-Uptime:                 13 hours 35 min 21 sec
-
-Threads: 2  Questions: 71  Slow queries: 0  Opens: 164  Flush tables: 3  Open tables: 65  Queries per second avg: 0.001
---------------
-
-saving msb_oracle8_0_16 variables to /home/dbdeployer/msb_oracle8_0_16-variables.txt
-/root/sandboxes/msb_oracle8_0_16/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_ps5_7_26/my sql -e '\s'
---------------
-/root/opt/mysql/ps5.7.26/bin/mysql  Ver 14.14 Distrib 5.7.26-29, for Linux (x86_64) using  6.2
-
-Connection id:          12
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server version:         5.7.26-29 Percona Server (GPL), Release 29, Revision 11ad961
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    latin1
-Db     characterset:    latin1
-Client characterset:    utf8
-Conn.  characterset:    utf8
-UNIX socket:            /tmp/mysql_sandbox5727.sock
-Uptime:                 13 hours 34 min 52 sec
-
-Threads: 1  Questions: 55  Slow queries: 0  Opens: 114  Flush tables: 1  Open tables: 107  Queries per second avg: 0.001
---------------
-
-saving msb_ps5_7_26 variables to /home/dbdeployer/msb_ps5_7_26-variables.txt
-/root/sandboxes/msb_ps5_7_26/my sqladmin var
----------------------------------------------------------------
-
-/root/sandboxes/msb_ps8_0_15/my sql -e '\s'
---------------
-/root/opt/mysql/ps8.0.15/bin/mysql  Ver 8.0.15-6 for Linux on x86_64 (Percona Server (GPL), Release 6, Revision 63abd08)
-
-Connection id:          18
-Current database:
-Current user:           msandbox@localhost
-SSL:                    Not in use
-Current pager:          stdout
-Using outfile:          ''
-Using delimiter:        ;
-Server version:         8.0.15-6 Percona Server (GPL), Release 6, Revision 63abd08
-Protocol version:       10
-Connection:             Localhost via UNIX socket
-Server characterset:    utf8mb4
-Db     characterset:    utf8mb4
-Client characterset:    utf8mb4
-Conn.  characterset:    utf8mb4
-UNIX socket:            /tmp/mysql_sandbox8015.sock
-Uptime:                 13 hours 34 min 17 sec
-
-Threads: 2  Questions: 71  Slow queries: 0  Opens: 142  Flush tables: 2  Open tables: 118  Queries per second avg: 0.001
---------------
-
-saving msb_ps8_0_15 variables to /home/dbdeployer/msb_ps8_0_15-variables.txt
-/root/sandboxes/msb_ps8_0_15/my sqladmin var
----------------------------------------------------------------
+dbdeployer info version --flavor percona 8.0 = ps8.0.29
+dbdeployer info version --flavor percona 5.7 = ps5.7.39
+dbdeployer info version --flavor mariadb 10.11 = dbdeployer info version --flavor mariadb 10.10 = maria10.10.1
+dbdeployer info version --flavor mariadb 10.9 = maria10.9.3
+dbdeployer info version --flavor mariadb 10.8 = maria10.8.5
+dbdeployer info version --flavor mariadb 10.7 = maria10.7.6
+dbdeployer info version --flavor mariadb 10.6 = maria10.6.10
+dbdeployer info version --flavor mariadb 10.5 = maria10.5.17
+dbdeployer info version --flavor mariadb 10.4 = maria10.4.26
+dbdeployer info version --flavor mariadb 10.3 = maria10.3.36
+dbdeployer info version --flavor mysql 8.0 = oracle8.0.30
+dbdeployer info version --flavor mysql 5.7 = oracle5.7.38
 ```

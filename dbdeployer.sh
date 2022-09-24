@@ -2,20 +2,41 @@
 ####################################################
 # dbdeployer setup
 ####################################################
+DEBUG=n
 DBDEPLOY_HOMEDIR='/home/dbdeployer'
 INSTALL_DIR='/svr-setup'
-dbdeploy_ver=1.30.1
-percona_ver_latest=8.0.15-6
-percona_ver=5.7.26-29
-mdb_ver_four=10.4.5
-mdb_ver_three=10.3.15
-mdb_ver_two=10.2.24
-mdb_ver_one=10.1.40
-oracle_ver_latest=8.0.16
-oracle_ver=5.7.26
+dbdeploy_ver=1.69.2
+percona_ver_latest=8.0.29-21
+percona_ver=5.7.39-42
+mdb_ver_eleven=10.11.1
+mdb_ver_ten=10.10.1
+mdb_ver_nine=10.9.3
+mdb_ver_eight=10.8.5
+mdb_ver_seven=10.7.6
+mdb_ver_six=10.6.10
+mdb_ver_five=10.5.17
+mdb_ver_four=10.4.26
+mdb_ver_three=10.3.36
+mdb_ver_two=10.2.44
+mdb_ver_one=10.1.48
+oracle_ver_latest=8.0.30
+oracle_ver=5.7.38
+
+MARIADB_MIRROR='mirror.rackspace.com'
 ####################################################
 if [ ! -d "$DBDEPLOY_HOMEDIR" ]; then
   mkdir -p "$DBDEPLOY_HOMEDIR"
+fi
+if [ ! -d "$INSTALL_DIR" ]; then
+  mkdir -p "$INSTALL_DIR"
+fi
+if [ ! -f /usr/bin/tar ]; then
+  yum -q -y install tar
+fi
+if [[ "$DBEUG" = [yY] ]]; then
+  VERBOSE_OPT=' --verbosity 1'
+else
+  VERBOSE_OPT=' --verbosity 0'
 fi
 ####################################################
 # functions
@@ -30,11 +51,12 @@ dbdeploy_install() {
   echo
   echo "$installtxt dbdeployer"
   cd "$INSTALL_DIR"
-  if [ ! -f "dbdeployer-${dbdeploy_ver}.linux.tar.gz" ]; then
+  if [[ ! -f "dbdeployer-${dbdeploy_ver}.linux.tar.gz" || ! -f /usr/local/bin/dbdeployer ]]; then
     wget -4 -q https://github.com/datacharmer/dbdeployer/releases/download/v${dbdeploy_ver}/dbdeployer-${dbdeploy_ver}.linux.tar.gz
     tar xzvf dbdeployer-${dbdeploy_ver}.linux.tar.gz
     chmod +x dbdeployer-${dbdeploy_ver}.linux
     mv -f dbdeployer-${dbdeploy_ver}.linux /usr/local/bin/dbdeployer
+    chown root:root /usr/local/bin/dbdeployer
   fi
   mkdir -p /root/opt/mysql
   echo
@@ -52,11 +74,12 @@ dbdeploy_install() {
 }
 
 percona_install() {
+  GLIBC_VER=$(rpm -qa glibc | awk -F '-' '{print $2}' | head -n1)
   echo
   echo "installing Percona binary tarballs"
   cd "$INSTALL_DIR"
-  wget -4 -q https://www.percona.com/downloads/Percona-Server-LATEST/Percona-Server-${percona_ver_latest}/binary/tarball/Percona-Server-${percona_ver_latest}-Linux.x86_64.ssl.tar.gz -O Percona-Server-${percona_ver_latest}-Linux.x86_64.ssl.tar.gz
-  dbdeployer unpack --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.ssl.tar.gz
+  wget -4 -q https://downloads.percona.com/downloads/Percona-Server-LATEST/Percona-Server-${percona_ver_latest}/binary/tarball/Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+  dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
   # pushd /root/sandboxes/msb_ps8_0_15
   # ./my sqladmin var | tr -s ' '
   # ./my sql -e '\s'
@@ -65,8 +88,10 @@ percona_install() {
   # ./metadata flavor
   # popd
 
-  wget -4 -q https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.ssl101.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.ssl101.tar.gz
-  dbdeployer unpack --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.ssl101.tar.gz
+  GLIBC_VER=2.17
+  wget -4 -q https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+  dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+  echo "dbdeployer versions"
   dbdeployer versions
   # pushd /root/sandboxes/msb_ps5.7.26
   # ./my sqladmin var | tr -s ' '
@@ -77,49 +102,26 @@ percona_install() {
   # popd
 }
 
+
 mariadb_install() {
   echo
   echo "installing MariaDB binary tarballs"
-  cd "$INSTALL_DIR"
-  wget -4 -q https://downloads.mariadb.org/interstitial/mariadb-${mdb_ver_four}/bintar-linux-glibc_214-x86_64/mariadb-${mdb_ver_four}-linux-glibc_214-x86_64.tar.gz/from/http%3A//nyc2.mirrors.digitalocean.com/mariadb/ -O mariadb-${mdb_ver_four}-linux-glibc_214-x86_64.tar.gz
-  dbdeployer unpack --prefix=maria mariadb-${mdb_ver_four}-linux-glibc_214-x86_64.tar.gz
-  # pushd /root/sandboxes/msb_maria10.4.5
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  # mdb_ver_array=("${mdb_ver_eleven}" "${mdb_ver_ten}" "${mdb_ver_nine}" "${mdb_ver_eight}" "${mdb_ver_seven}" "${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}" "${mdb_ver_two}" "${mdb_ver_one}")
+  mdb_ver_array=("${mdb_ver_ten}" "${mdb_ver_nine}" "${mdb_ver_eight}" "${mdb_ver_seven}" "${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}")
 
-  wget -4 -q https://downloads.mariadb.org/interstitial/mariadb-${mdb_ver_three}/bintar-linux-x86_64/mariadb-${mdb_ver_three}-linux-x86_64.tar.gz/from/http%3A//sfo1.mirrors.digitalocean.com/mariadb/ -O mariadb-${mdb_ver_three}-linux-x86_64.tar.gz
-  dbdeployer unpack --prefix=maria mariadb-${mdb_ver_three}-linux-x86_64.tar.gz
-  # pushd /root/sandboxes/msb_maria10.3.15
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
-
-  wget -4 -q https://downloads.mariadb.org/interstitial/mariadb-${mdb_ver_two}/bintar-linux-x86_64/mariadb-${mdb_ver_two}-linux-x86_64.tar.gz/from/http%3A//sfo1.mirrors.digitalocean.com/mariadb/ -O mariadb-${mdb_ver_two}-linux-x86_64.tar.gz
-  dbdeployer unpack --prefix=maria mariadb-${mdb_ver_two}-linux-x86_64.tar.gz
-  # pushd /root/sandboxes/msb_maria10.2.24
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
-
-  wget -4 -q https://downloads.mariadb.org/interstitial/mariadb-${mdb_ver_one}/bintar-linux-x86_64/mariadb-${mdb_ver_one}-linux-x86_64.tar.gz/from/http%3A//sfo1.mirrors.digitalocean.com/mariadb/ -O mariadb-${mdb_ver_one}-linux-x86_64.tar.gz
-  dbdeployer unpack --prefix=maria mariadb-${mdb_ver_one}-linux-x86_64.tar.gz
-  # pushd /root/sandboxes/msb_maria10.1.40
-  # ./my sqladmin var | tr -s ' '
-  # ./my sql -e '\s'
-  # ./metadata help
-  # ./metadata version
-  # ./metadata flavor
-  # popd
+  for mdb_v in "${mdb_ver_array[@]}"; do
+    cd "$INSTALL_DIR"
+    wget -4 -q https://${MARIADB_MIRROR}/mariadb/mariadb-${mdb_v}/bintar-linux-systemd-x86_64/mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz -O mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=maria mariadb-${mdb_v}-linux-systemd-x86_64.tar.gz
+    # pushd /root/sandboxes/msb_maria${mdb_v}
+    # ./my sqladmin var | tr -s ' '
+    # ./my sql -e '\s'
+    # ./metadata help
+    # ./metadata version
+    # ./metadata flavor
+    # popd
+  done
+  echo "dbdeployer versions"
   dbdeployer versions
 }
 
@@ -127,8 +129,8 @@ oracle_install() {
   echo
   echo "installing Oracle MySQL binary tarballs"
   cd "$INSTALL_DIR"
-  dbdeployer remote download mysql-${oracle_ver_latest}
-  dbdeployer unpack --prefix=oracle mysql-${oracle_ver_latest}.tar.xz
+  wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
+  dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
   # pushd /root/sandboxes/msb_oracle8.0.16
   # ./my sqladmin var | tr -s ' '
   # ./my sql -e '\s'
@@ -137,8 +139,8 @@ oracle_install() {
   # ./metadata flavor
   # popd
 
-  dbdeployer remote download mysql-${oracle_ver}
-  dbdeployer unpack --prefix=oracle mysql-${oracle_ver}.tar.xz
+  wget -4 -q https://downloads.mysql.com/archives/get/p/23/file/mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz -O mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
+  dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
   # pushd /root/sandboxes/msb_oracle5.7.26
   # ./my sqladmin var | tr -s ' '
   # ./my sql -e '\s'
@@ -146,6 +148,7 @@ oracle_install() {
   # ./metadata version
   # ./metadata flavor
   # popd
+  echo "dbdeployer versions"
   dbdeployer versions
 }
 
@@ -160,17 +163,38 @@ cmds() {
   echo -n "dbdeployer info version --flavor percona 5.7 = "
   dbdeployer info version --flavor percona 5.7
   #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.11 = "
+  dbdeployer info version --flavor mariadb 10.11
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.10 = "
+  dbdeployer info version --flavor mariadb 10.10
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.9 = "
+  dbdeployer info version --flavor mariadb 10.9
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.8 = "
+  dbdeployer info version --flavor mariadb 10.8
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.7 = "
+  dbdeployer info version --flavor mariadb 10.7
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.6 = "
+  dbdeployer info version --flavor mariadb 10.6
+  #echo
+  echo -n "dbdeployer info version --flavor mariadb 10.5 = "
+  dbdeployer info version --flavor mariadb 10.5
+  #echo
   echo -n "dbdeployer info version --flavor mariadb 10.4 = "
   dbdeployer info version --flavor mariadb 10.4
   #echo
   echo -n "dbdeployer info version --flavor mariadb 10.3 = "
   dbdeployer info version --flavor mariadb 10.3
   #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.2 = "
-  dbdeployer info version --flavor mariadb 10.2
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.1 = "
-  dbdeployer info version --flavor mariadb 10.1
+  # echo -n "dbdeployer info version --flavor mariadb 10.2 = "
+  # dbdeployer info version --flavor mariadb 10.2
+  # #echo
+  # echo -n "dbdeployer info version --flavor mariadb 10.1 = "
+  # dbdeployer info version --flavor mariadb 10.1
   #echo
   echo -n "dbdeployer info version --flavor mysql 8.0 = "
   dbdeployer info version --flavor mysql 8.0
