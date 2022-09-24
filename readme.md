@@ -1,6 +1,6 @@
 # dbdeployer for centminmod.com
 
-[dbdeployer](https://github.com/datacharmer/dbdeployer) wrapper script for [centminmod.com LEMP stack](https://centminmod.com) environments on CentOS 7.x 64bit OSes.
+[dbdeployer](https://github.com/datacharmer/dbdeployer) wrapper script for [centminmod.com LEMP stack](https://centminmod.com) environments on CentOS 7.x/AlmaLinux 8 64bit OSes.
 
 # Content
 
@@ -11,6 +11,7 @@
 * [Reset](#reset)
 * [Deploy Single Sandbox Instances](#deploy-single-sandbox-instances)
 * [Check](#check)
+* [Reset Binaries Only](#reset-binaries-only)
 
 # Usage
 
