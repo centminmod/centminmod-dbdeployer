@@ -278,7 +278,7 @@ dbdeployer installed binaries
 ---------------------------------------------------------------
 dbdeployer info version --flavor percona 8.0 = ps8.0.29
 dbdeployer info version --flavor percona 5.7 = ps5.7.39
-dbdeployer info version --flavor mariadb 10.11 = dbdeployer info version --flavor mariadb 10.10 = maria10.10.1
+dbdeployer info version --flavor mariadb 10.10 = maria10.10.1
 dbdeployer info version --flavor mariadb 10.9 = maria10.9.3
 dbdeployer info version --flavor mariadb 10.8 = maria10.8.5
 dbdeployer info version --flavor mariadb 10.7 = maria10.7.6

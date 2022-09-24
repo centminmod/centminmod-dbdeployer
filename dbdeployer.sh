@@ -113,7 +113,7 @@ mariadb_install() {
   echo
   echo "installing MariaDB binary tarballs"
   # mdb_ver_array=("${mdb_ver_eleven}" "${mdb_ver_ten}" "${mdb_ver_nine}" "${mdb_ver_eight}" "${mdb_ver_seven}" "${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}" "${mdb_ver_two}" "${mdb_ver_one}")
-  mdb_ver_array=("${mdb_ver_ten}" "${mdb_ver_nine}" "${mdb_ver_eight}" "${mdb_ver_seven}" "${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}")
+  mdb_ver_array=("${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}")
 
   for mdb_v in "${mdb_ver_array[@]}"; do
     cd "$INSTALL_DIR"
@@ -172,17 +172,17 @@ cmds() {
   # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
   # dbdeployer info version --flavor mariadb 10.11
   #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.10 = "
-  dbdeployer info version --flavor mariadb 10.10
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.9 = "
-  dbdeployer info version --flavor mariadb 10.9
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.8 = "
-  dbdeployer info version --flavor mariadb 10.8
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.7 = "
-  dbdeployer info version --flavor mariadb 10.7
+  # echo -n "dbdeployer info version --flavor mariadb 10.10 = "
+  # dbdeployer info version --flavor mariadb 10.10
+  # #echo
+  # echo -n "dbdeployer info version --flavor mariadb 10.9 = "
+  # dbdeployer info version --flavor mariadb 10.9
+  # #echo
+  # echo -n "dbdeployer info version --flavor mariadb 10.8 = "
+  # dbdeployer info version --flavor mariadb 10.8
+  # #echo
+  # echo -n "dbdeployer info version --flavor mariadb 10.7 = "
+  # dbdeployer info version --flavor mariadb 10.7
   #echo
   echo -n "dbdeployer info version --flavor mariadb 10.6 = "
   dbdeployer info version --flavor mariadb 10.6
@@ -269,8 +269,8 @@ install_bins() {
   for b in "${arrays[@]}"; do
     echo
     echo "creating $b single sandbox instance"
-    echo "dbdeployer deploy single $b"
-    dbdeployer deploy single $b
+    echo "dbdeployer deploy single $b --skip-library-check"
+    dbdeployer deploy single $b --skip-library-check
   done
   echo
   echo "dbdeployer sandboxes"
