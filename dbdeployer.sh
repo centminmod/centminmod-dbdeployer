@@ -112,7 +112,7 @@ mariadb_install() {
   echo
   echo "installing MariaDB binary tarballs"
   # mdb_ver_array=("${mdb_ver_eleven}" "${mdb_ver_ten}" "${mdb_ver_nine}" "${mdb_ver_eight}" "${mdb_ver_seven}" "${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}" "${mdb_ver_two}" "${mdb_ver_one}")
-  mdb_ver_array=("${mdb_ver_six}" "${mdb_ver_five}" "${mdb_ver_four}" "${mdb_ver_three}")
+  mdb_ver_array=("${mdb_ver_eleven}" "${mdb_ver_six}" "${mdb_ver_four}" "${mdb_ver_three}")
 
   for mdb_v in "${mdb_ver_array[@]}"; do
     if [ ! -d "${DBDEPLOY_PARENT_DIR}/maria${mdb_v}" ]; then
@@ -198,10 +198,10 @@ cmds() {
     # dbdeployer info version --flavor percona 5.7
   fi
   if [[ "$mode" = 'mariadb' || "$mode" = 'all' ]]; then
-    #echo
-    # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
-    # dbdeployer info version --flavor mariadb 10.11
-    #echo
+    echo
+    echo -n "dbdeployer info version --flavor mariadb 10.11 = "
+    dbdeployer info version --flavor mariadb 10.11
+    echo
     # echo -n "dbdeployer info version --flavor mariadb 10.10 = "
     # dbdeployer info version --flavor mariadb 10.10
     # #echo
@@ -217,8 +217,8 @@ cmds() {
     echo -n "dbdeployer info version --flavor mariadb 10.6 = "
     dbdeployer info version --flavor mariadb 10.6
     #echo
-    echo -n "dbdeployer info version --flavor mariadb 10.5 = "
-    dbdeployer info version --flavor mariadb 10.5
+    # echo -n "dbdeployer info version --flavor mariadb 10.5 = "
+    # dbdeployer info version --flavor mariadb 10.5
     #echo
     echo -n "dbdeployer info version --flavor mariadb 10.4 = "
     dbdeployer info version --flavor mariadb 10.4
@@ -253,6 +253,9 @@ cmds() {
     echo "---------------------------------------------------------------"
     dbdeployer sandboxes | awk '{print $1}' | while read d; do
       echo
+      echo "/root/sandboxes/$d/my.sandbox.cnf"
+      cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
+      echo
       echo "/root/sandboxes/$d/my sql -e '\s'"
       /root/sandboxes/$d/my sql -e '\s'
       # echo
@@ -277,7 +280,7 @@ resetall() {
   echo "resetting all"
   echo
   echo "dbdeployer delete all"
-  dbdeployer delete all
+  echo y | dbdeployer delete all
   dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
   declare -a arrays
   arrays=(${dbdeploy_bins})
@@ -333,12 +336,16 @@ install_bins() {
     fi
     if [[ "$binlogs" = 'binlogs' || "$binlogs" = 'binlog' ]]; then
       if [[ "$b" =~ maria ]]; then
-        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1"
+        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1 --my-cnf-options=innodb_file_per_table=1 --my-cnf-options=innodb_flush_log_at_trx_commit=2 --my-cnf-options=optimizer_use_condition_selectivity=1"
       else
-        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1"
+        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1 --my-cnf-options=innodb_file_per_table=1 --my-cnf-options=innodb_flush_log_at_trx_commit=2"
       fi
     else
-      mycnf_opts=""
+      if [[ "$b" =~ maria ]]; then
+        mycnf_opts=" --my-cnf-options=innodb_file_per_table=1 --my-cnf-options=innodb_flush_log_at_trx_commit=2 --my-cnf-options=optimizer_use_condition_selectivity=1"
+      else
+        mycnf_opts=" --my-cnf-options=innodb_file_per_table=1 --my-cnf-options=innodb_flush_log_at_trx_commit=2"
+      fi
     fi
     echo
     echo "creating $b single sandbox instance"
@@ -352,12 +359,24 @@ install_bins() {
   echo "sandbox info"
   dbdeployer sandboxes | awk '{print $1}' | while read d; do
     echo
+    echo "/root/sandboxes/$d/my.sandbox.cnf"
+    cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
+    echo
     echo "/root/sandboxes/$d/my sql -e '\s'"
     /root/sandboxes/$d/my sql -e '\s'
   done
 }
 
 case "$1" in
+  install-all-sandboxes )
+    dbdeploy_install
+    percona_install
+    mariadb_install
+    oracle_install
+    oracle_shell
+    cmds all
+    install_bins noforce "$2"
+    ;;
   install )
     dbdeploy_install
     percona_install
@@ -410,6 +429,8 @@ case "$1" in
     echo
     echo "usage:"
     echo
+    echo "$0 install-all-sandboxes"
+    echo "$0 install-all-sandboxes binlogs"
     echo "$0 install"
     echo "$0 install-mariadb"
     echo "$0 install-percona"
