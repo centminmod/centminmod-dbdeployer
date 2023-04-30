@@ -179,55 +179,62 @@ oracle_shell() {
 }
 
 cmds() {
+  mode="$1"
   echo
   echo "---------------------------------------------------------------"
   echo "dbdeployer installed binaries"
   echo "---------------------------------------------------------------"
-  echo -n "dbdeployer info version --flavor percona 8.0 = "
-  dbdeployer info version --flavor percona 8.0
-  #echo
-  # echo -n "dbdeployer info version --flavor percona 5.7 = "
-  # dbdeployer info version --flavor percona 5.7
-  #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
-  # dbdeployer info version --flavor mariadb 10.11
-  #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.10 = "
-  # dbdeployer info version --flavor mariadb 10.10
-  # #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.9 = "
-  # dbdeployer info version --flavor mariadb 10.9
-  # #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.8 = "
-  # dbdeployer info version --flavor mariadb 10.8
-  # #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.7 = "
-  # dbdeployer info version --flavor mariadb 10.7
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.6 = "
-  dbdeployer info version --flavor mariadb 10.6
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.5 = "
-  dbdeployer info version --flavor mariadb 10.5
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.4 = "
-  dbdeployer info version --flavor mariadb 10.4
-  #echo
-  echo -n "dbdeployer info version --flavor mariadb 10.3 = "
-  dbdeployer info version --flavor mariadb 10.3
-  #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.2 = "
-  # dbdeployer info version --flavor mariadb 10.2
-  # #echo
-  # echo -n "dbdeployer info version --flavor mariadb 10.1 = "
-  # dbdeployer info version --flavor mariadb 10.1
-  #echo
-  echo -n "dbdeployer info version --flavor mysql 8.0 = "
-  dbdeployer info version --flavor mysql 8.0
-  #echo
-  # echo -n "dbdeployer info version --flavor mysql 5.7 = "
-  # dbdeployer info version --flavor mysql 5.7
-  #echo
+  if [[ "$mode" = 'percona' || "$mode" = 'all' ]]; then
+    echo -n "dbdeployer info version --flavor percona 8.0 = "
+    dbdeployer info version --flavor percona 8.0
+    #echo
+    # echo -n "dbdeployer info version --flavor percona 5.7 = "
+    # dbdeployer info version --flavor percona 5.7
+  fi
+  if [[ "$mode" = 'mariadb' || "$mode" = 'all' ]]; then
+    #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
+    # dbdeployer info version --flavor mariadb 10.11
+    #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.10 = "
+    # dbdeployer info version --flavor mariadb 10.10
+    # #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.9 = "
+    # dbdeployer info version --flavor mariadb 10.9
+    # #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.8 = "
+    # dbdeployer info version --flavor mariadb 10.8
+    # #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.7 = "
+    # dbdeployer info version --flavor mariadb 10.7
+    #echo
+    echo -n "dbdeployer info version --flavor mariadb 10.6 = "
+    dbdeployer info version --flavor mariadb 10.6
+    #echo
+    echo -n "dbdeployer info version --flavor mariadb 10.5 = "
+    dbdeployer info version --flavor mariadb 10.5
+    #echo
+    echo -n "dbdeployer info version --flavor mariadb 10.4 = "
+    dbdeployer info version --flavor mariadb 10.4
+    #echo
+    echo -n "dbdeployer info version --flavor mariadb 10.3 = "
+    dbdeployer info version --flavor mariadb 10.3
+    #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.2 = "
+    # dbdeployer info version --flavor mariadb 10.2
+    # #echo
+    # echo -n "dbdeployer info version --flavor mariadb 10.1 = "
+    # dbdeployer info version --flavor mariadb 10.1
+    #echo
+  fi
+  if [[ "$mode" = 'oracle' || "$mode" = 'all' ]]; then
+    echo -n "dbdeployer info version --flavor mysql 8.0 = "
+    dbdeployer info version --flavor mysql 8.0
+    #echo
+    # echo -n "dbdeployer info version --flavor mysql 5.7 = "
+    # dbdeployer info version --flavor mysql 5.7
+    #echo
+  fi
   if [[ "$(dbdeployer sandboxes)" ]]; then
     echo
     echo "---------------------------------------------------------------"
@@ -328,7 +335,23 @@ case "$1" in
     mariadb_install
     oracle_install
     oracle_shell
-    cmds
+    cmds all
+    ;;
+  install-mariadb )
+    dbdeploy_install
+    mariadb_install
+    cmds mariadb
+    ;;
+  install-percona )
+    dbdeploy_install
+    percona_install
+    cmds percona
+    ;;
+  install-oracle )
+    dbdeploy_install
+    oracle_install
+    oracle_shell
+    cmds oracle
     ;;
   update )
     dbdeploy_install update
@@ -355,6 +378,6 @@ case "$1" in
     echo
     echo "usage:"
     echo
-    echo "$0 {install|update|wipe|reset|reset-binary|check|install-sandboxes|install-sandboxes-force}"
+    echo "$0 {install|install-mariadb|install-percona|install-oracle|update|wipe|reset|reset-binary|check|install-sandboxes|install-sandboxes-force}"
     ;;
 esac
