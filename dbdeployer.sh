@@ -6,22 +6,22 @@ DEBUG=n
 DBDEPLOY_PARENT_DIR='/root/opt/mysql'
 DBDEPLOY_HOMEDIR='/home/dbdeployer'
 INSTALL_DIR='/svr-setup'
-dbdeploy_ver=1.69.2
-percona_ver_latest=8.0.29-21
-percona_ver=5.7.39-42
-mdb_ver_eleven=10.11.1
-mdb_ver_ten=10.10.1
-mdb_ver_nine=10.9.3
-mdb_ver_eight=10.8.5
-mdb_ver_seven=10.7.6
-mdb_ver_six=10.6.10
-mdb_ver_five=10.5.17
-mdb_ver_four=10.4.26
-mdb_ver_three=10.3.36
+dbdeploy_ver=1.72.0
+percona_ver_latest=8.0.32-24
+percona_ver=5.7.41-44
+mdb_ver_eleven=10.11.2
+mdb_ver_ten=10.10.3
+mdb_ver_nine=10.9.5
+mdb_ver_eight=10.8.7
+mdb_ver_seven=10.7.8
+mdb_ver_six=10.6.12
+mdb_ver_five=10.5.19
+mdb_ver_four=10.4.28
+mdb_ver_three=10.3.38
 mdb_ver_two=10.2.44
 mdb_ver_one=10.1.48
-oracle_ver_latest=8.0.30
-oracle_ver=5.7.38
+oracle_ver_latest=8.0.33
+oracle_ver=5.7.41
 
 MARIADB_MIRROR='mirror.rackspace.com'
 ####################################################
@@ -90,29 +90,15 @@ percona_install() {
     cd "$INSTALL_DIR"
     wget -4 -q https://downloads.percona.com/downloads/Percona-Server-LATEST/Percona-Server-${percona_ver_latest}/binary/tarball/Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
     dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver_latest}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-    # pushd /root/sandboxes/msb_ps8_0_15
-    # ./my sqladmin var | tr -s ' '
-    # ./my sql -e '\s'
-    # ./metadata help
-    # ./metadata version
-    # ./metadata flavor
-    # popd
   fi
 
-  if [ ! -d "${DBDEPLOY_PARENT_DIR}/ps${percona_ver_short}" ]; then
-    GLIBC_VER=2.17
-    wget -4 -q https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-    dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
-    echo "dbdeployer versions"
-    dbdeployer versions
-    # pushd /root/sandboxes/msb_ps5.7.26
-    # ./my sqladmin var | tr -s ' '
-    # ./my sql -e '\s'
-    # ./metadata help
-    # ./metadata version
-    # ./metadata flavor
-    # popd
-  fi
+  # if [ ! -d "${DBDEPLOY_PARENT_DIR}/ps${percona_ver_short}" ]; then
+  #   GLIBC_VER=2.17
+  #   wget -4 -q https://downloads.percona.com/downloads/Percona-Server-5.7/Percona-Server-${percona_ver}/binary/tarball/Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz -O Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+  #   dbdeployer unpack${VERBOSE_OPT} --prefix=ps Percona-Server-${percona_ver}-Linux.x86_64.glibc${GLIBC_VER}-minimal.tar.gz
+  #   echo "dbdeployer versions"
+  #   dbdeployer versions
+  # fi
 }
 
 
@@ -141,12 +127,13 @@ mariadb_install() {
 }
 
 oracle_install() {
+  GLIBC_VER=$(rpm -qa glibc | awk -F '-' '{print $2}' | head -n1)
   if [ ! -d "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}" ]; then
     echo
     echo "installing Oracle MySQL binary tarballs"
     cd "$INSTALL_DIR"
-    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
-    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc2.17-x86_64-minimal.tar.xz
+    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
+    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
     # pushd /root/sandboxes/msb_oracle8.0.16
     # ./my sqladmin var | tr -s ' '
     # ./my sql -e '\s'
@@ -156,17 +143,18 @@ oracle_install() {
     # popd
   fi
 
-  if [ ! -d "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver}" ]; then
-    wget -4 -q https://downloads.mysql.com/archives/get/p/23/file/mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz -O mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
-    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver}-linux-glibc2.12-x86_64.tar.gz
-    # pushd /root/sandboxes/msb_oracle5.7.26
-    # ./my sqladmin var | tr -s ' '
-    # ./my sql -e '\s'
-    # ./metadata help
-    # ./metadata version
-    # ./metadata flavor
-    # popd
-  fi
+  # GLIBC_VER=2.17
+  # if [ ! -d "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver}" ]; then
+  #   wget -4 -q https://downloads.mysql.com/archives/get/p/23/file/mysql-${oracle_ver}-linux-glibc${GLIBC_VER}-x86_64.tar.gz -O mysql-${oracle_ver}-linux-glibc${GLIBC_VER}-x86_64.tar.gz
+  #   dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver}-linux-glibc${GLIBC_VER}-x86_64.tar.gz
+  #   # pushd /root/sandboxes/msb_oracle5.7.26
+  #   # ./my sqladmin var | tr -s ' '
+  #   # ./my sql -e '\s'
+  #   # ./metadata help
+  #   # ./metadata version
+  #   # ./metadata flavor
+  #   # popd
+  # fi
   echo "dbdeployer versions"
   dbdeployer versions
 }
@@ -176,6 +164,7 @@ oracle_shell() {
     echo
     echo "installing Oracle MySQL Shell"
     cd "$INSTALL_DIR"
+    GLIBC_VER=$(rpm -qa glibc | awk -F '-' '{print $2}' | head -n1)
     wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-Shell/mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz -O mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
     dbdeployer unpack${VERBOSE_OPT} --shell --prefix=oracle mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
   elif [ -f "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh" ]; then
@@ -191,8 +180,8 @@ cmds() {
   echo -n "dbdeployer info version --flavor percona 8.0 = "
   dbdeployer info version --flavor percona 8.0
   #echo
-  echo -n "dbdeployer info version --flavor percona 5.7 = "
-  dbdeployer info version --flavor percona 5.7
+  # echo -n "dbdeployer info version --flavor percona 5.7 = "
+  # dbdeployer info version --flavor percona 5.7
   #echo
   # echo -n "dbdeployer info version --flavor mariadb 10.11 = "
   # dbdeployer info version --flavor mariadb 10.11
@@ -230,8 +219,8 @@ cmds() {
   echo -n "dbdeployer info version --flavor mysql 8.0 = "
   dbdeployer info version --flavor mysql 8.0
   #echo
-  echo -n "dbdeployer info version --flavor mysql 5.7 = "
-  dbdeployer info version --flavor mysql 5.7
+  # echo -n "dbdeployer info version --flavor mysql 5.7 = "
+  # dbdeployer info version --flavor mysql 5.7
   #echo
   if [[ "$(dbdeployer sandboxes)" ]]; then
     echo
