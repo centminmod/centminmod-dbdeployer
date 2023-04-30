@@ -25,6 +25,9 @@ oracle_ver=5.7.41
 
 MARIADB_MIRROR='mirror.rackspace.com'
 ####################################################
+if [[ "$(grep -o el8 /etc/os-release)" = 'el8' ]]; then
+  CENTOS_EIGHT=8
+fi
 if [ ! -d "$DBDEPLOY_HOMEDIR" ]; then
   mkdir -p "$DBDEPLOY_HOMEDIR"
 fi
@@ -39,6 +42,9 @@ if [ ! -f /usr/lib/libncurses.so ]; then
 fi
 if [ ! -f /usr/lib64/libaio.so ]; then
   yum -q -y install libaio-devel libaio numactl-libs ncurses-compat-libs procps
+fi
+if [[ "$CENTOS_EIGHT" -eq 8 && ! -f /usr/lib64/libncurses.so.5 ]]; then
+  yum -q -y install ncurses-compat-libs
 fi
 if [[ "$DBEUG" = [yY] ]]; then
   VERBOSE_OPT=' --verbosity 1'
@@ -258,6 +264,14 @@ cmds() {
   fi
 }
 
+delete_sandboxes() {
+  echo
+  echo "delete sandboxes only"
+  echo
+  echo "dbdeployer delete all"
+  echo y | dbdeployer delete all
+}
+
 resetall() {
   echo
   echo "resetting all"
@@ -301,6 +315,7 @@ resetbins() {
 
 install_bins() {
   forced=$1
+  binlogs="$2"
   if [[ "$forced" = force ]]; then
     force_opt=' --force'
   else
@@ -311,10 +326,20 @@ install_bins() {
   declare -a arrays
   arrays=(${dbdeploy_bins})
   for b in "${arrays[@]}"; do
+    if [[ "$b" =~ maria ]]; then
+      mdb_authopt=" --init-options '--auth-root-authentication-method=normal'"
+    else
+      mdb_authopt=""
+    fi
+    if [[ "$binlogs" = 'binlogs' ]]; then
+      mycnf_opts=" --my-cnf-options '\nlog-bin=mysql-bin\nmax_binlog_size=500M\nbinlog_file_cache_size=131072\nbinlog_cache_size=131072\nbinlog_stmt_cache_size=131072\nbinlog-commit-wait-count=100\nbinlog_commit_wait_usec=100000\nexpire_logs_days=7\nbinlog-format=row\nsync-binlog=1\n'"
+    else
+      mycnf_opts=""
+    fi
     echo
     echo "creating $b single sandbox instance"
-    echo "dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir"
-    dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir
+    echo "dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir${mdb_authopt}${mycnf_opts}"
+    dbdeployer deploy single $b --skip-library-check${force_opt} --socket-in-datadir${mdb_authopt}${mycnf_opts}
   done
   echo
   echo "dbdeployer sandboxes"
@@ -365,19 +390,35 @@ case "$1" in
   reset-binary )
     resetbins
     ;;
+  delete-sandboxes )
+    delete_sandboxes
+    ;;
   check )
     cmds
     ;;
   install-sandboxes )
-    install_bins
+    install_bins noforce "$2"
     ;;
   install-sandboxes-force )
-    install_bins force
+    install_bins force "$2"
     ;;
   * )
     echo
     echo "usage:"
     echo
-    echo "$0 {install|install-mariadb|install-percona|install-oracle|update|wipe|reset|reset-binary|check|install-sandboxes|install-sandboxes-force}"
+    echo "$0 install"
+    echo "$0 install-mariadb"
+    echo "$0 install-percona"
+    echo "$0 install-oracle"
+    echo "$0 update"
+    echo "$0 wipe"
+    echo "$0 reset"
+    echo "$0 reset-binary"
+    echo "$0 check"
+    echo "$0 delete-sandboxes"
+    echo "$0 install-sandboxes"
+    echo "$0 install-sandboxes-force"
+    echo "$0 install-sandboxes binlogs"
+    echo "$0 install-sandboxes-force binlogs"
     ;;
 esac
