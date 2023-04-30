@@ -91,7 +91,7 @@ Use "dbdeployer [command] --help" for more information about a command.
 ./dbdeployer.sh install
 ```
 
-Install sandbox singles for Oracle MySQL 5.7, 8.0, MariaDB 10.3 to 10.10 and Percona 5.7 and 8.0.
+Install sandbox singles for Oracle MySQL 8.0, MariaDB 10.3 to 10.6 and Percona 8.0.
 
 ```
 ./dbdeployer.sh install
