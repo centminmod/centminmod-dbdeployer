@@ -1,0 +1,459 @@
+diff -u msb_oracle8_0_33-variables.txt msb_ps8_0_32-variables.txt
+--- msb_oracle8_0_33-variables.txt      2023-04-30 09:02:37.832077164 -0400
++++ msb_ps8_0_32-variables.txt  2023-04-30 09:02:37.946077173 -0400
+@@ -1,6 +1,6 @@
+--
++
+ | Variable_name | Value |
+--
++
+ | activate_all_roles_on_login | OFF |
+ | admin_address | |
+ | admin_port | 33062 |
+@@ -21,11 +21,12 @@
+ | automatic_sp_privileges | ON |
+ | avoid_temporal_upgrade | OFF |
+ | back_log | 151 |
+-| basedir | /root/opt/mysql/oracle8.0.33/ |
++| basedir | /root/opt/mysql/ps8.0.32/ |
+ | big_tables | OFF |
+ | bind_address | 127.0.0.1 |
+ | binlog_cache_size | 32768 |
+ | binlog_checksum | CRC32 |
++| binlog_ddl_skip_rewrite | OFF |
+ | binlog_direct_non_transactional_updates | OFF |
+ | binlog_encryption | OFF |
+ | binlog_error_action | ABORT_SERVER |
+@@ -43,13 +44,17 @@
+ | binlog_row_metadata | MINIMAL |
+ | binlog_row_value_options | |
+ | binlog_rows_query_log_events | OFF |
++| binlog_skip_flush_commands | OFF |
++| binlog_space_limit | 0 |
+ | binlog_stmt_cache_size | 32768 |
+ | binlog_transaction_compression | OFF |
+ | binlog_transaction_compression_level_zstd | 3 |
+ | binlog_transaction_dependency_history_size | 25000 |
+ | binlog_transaction_dependency_tracking | COMMIT_ORDER |
+ | block_encryption_mode | aes-128-ecb |
+-| build_id | dc80bb756a4fa57ffaaf8c5621cd7a41926b8233 |
++| buffered_error_log_filename | |
++| buffered_error_log_size | 0 |
++| build_id | e5a5e5d70ed09629e71be0f07e98857ca9007e93 |
+ | bulk_insert_buffer_size | 8388608 |
+ | caching_sha2_password_auto_generate_rsa_keys | ON |
+ | caching_sha2_password_digest_rounds | 5000 |
+@@ -62,7 +67,7 @@
+ | character_set_results | utf8mb4 |
+ | character_set_server | utf8mb4 |
+ | character_set_system | utf8mb3 |
+-| character_sets_dir | /root/opt/mysql/oracle8.0.33/share/charsets/ |
++| character_sets_dir | /root/opt/mysql/ps8.0.32/share/charsets/ |
+ | check_proxy_users | OFF |
+ | collation_connection | utf8mb4_0900_ai_ci |
+ | collation_database | utf8mb4_0900_ai_ci |
+@@ -75,7 +80,7 @@
+ | core_file | OFF |
+ | create_admin_listener_thread | OFF |
+ | cte_max_recursion_depth | 1000 |
+-| datadir | /root/sandboxes/msb_oracle8_0_33/data/ |
++| datadir | /root/sandboxes/msb_ps8_0_32/data/ |
+ | default_authentication_plugin | caching_sha2_password |
+ | default_collation_for_utf8mb4 | utf8mb4_0900_ai_ci |
+ | default_password_lifetime | 0 |
+@@ -90,10 +95,13 @@
+ | disabled_storage_engines | |
+ | disconnect_on_expired_password | ON |
+ | div_precision_increment | 4 |
++| encrypt_tmp_files | OFF |
+ | end_markers_in_json | OFF |
+ | enforce_gtid_consistency | OFF |
++| enforce_storage_engine | |
+ | eq_range_index_dive_limit | 200 |
+ | event_scheduler | ON |
++| expand_fast_index_creation | OFF |
+ | expire_logs_days | 0 |
+ | explain_format | TRADITIONAL |
+ | explicit_defaults_for_timestamp | ON |
+@@ -104,9 +112,10 @@
+ | ft_max_word_len | 84 |
+ | ft_min_word_len | 4 |
+ | ft_query_expansion_limit | 20 |
++| ft_query_extra_word_chars | OFF |
+ | ft_stopword_file | (built-in) |
+ | general_log | OFF |
+-| general_log_file | /root/sandboxes/msb_oracle8_0_33/data/inc2.log |
++| general_log_file | /root/sandboxes/msb_ps8_0_32/data/inc2.log |
+ | generated_random_password_length | 20 |
+ | global_connection_memory_limit | 18446744073709551615 |
+ | global_connection_memory_tracking | OFF |
+@@ -117,6 +126,8 @@
+ | gtid_mode | OFF |
+ | gtid_owned | |
+ | gtid_purged | |
++| have_backup_locks | YES |
++| have_backup_safe_binlog_info | YES |
+ | have_compress | YES |
+ | have_dynamic_loading | YES |
+ | have_geometry | YES |
+@@ -124,6 +135,7 @@
+ | have_profiling | YES |
+ | have_query_cache | NO |
+ | have_rtree_keys | YES |
++| have_snapshot_cloning | YES |
+ | have_ssl | YES |
+ | have_statement_timeout | YES |
+ | have_symlink | DISABLED |
+@@ -161,12 +173,16 @@
+ | innodb_change_buffer_max_size | 25 |
+ | innodb_change_buffering | all |
+ | innodb_checksum_algorithm | crc32 |
++| innodb_cleaner_lsn_age_factor | high_checkpoint |
+ | innodb_cmp_per_index_enabled | OFF |
+ | innodb_commit_concurrency | 0 |
++| innodb_compressed_columns_threshold | 96 |
++| innodb_compressed_columns_zip_level | 6 |
+ | innodb_compression_failure_threshold_pct | 5 |
+ | innodb_compression_level | 6 |
+ | innodb_compression_pad_pct_max | 50 |
+ | innodb_concurrency_tickets | 5000 |
++| innodb_corrupt_table_action | assert |
+ | innodb_data_file_path | ibdata1:12M:autoextend |
+ | innodb_data_home_dir | |
+ | innodb_ddl_buffer_size | 1048576 |
+@@ -181,6 +197,8 @@
+ | innodb_doublewrite_dir | |
+ | innodb_doublewrite_files | 2 |
+ | innodb_doublewrite_pages | 4 |
++| innodb_empty_free_list_algorithm | legacy |
++| innodb_encrypt_online_alter_logs | OFF |
+ | innodb_extend_and_initialize | ON |
+ | innodb_fast_shutdown | 1 |
+ | innodb_file_per_table | ON |
+@@ -191,6 +209,7 @@
+ | innodb_flush_neighbors | 0 |
+ | innodb_flush_sync | ON |
+ | innodb_flushing_avg_loops | 30 |
++| innodb_force_index_records_in_range | 0 |
+ | innodb_force_load_corrupted | OFF |
+ | innodb_force_recovery | 0 |
+ | innodb_fsync_threshold | 0 |
+@@ -198,6 +217,7 @@
+ | innodb_ft_cache_size | 8000000 |
+ | innodb_ft_enable_diag_print | OFF |
+ | innodb_ft_enable_stopword | ON |
++| innodb_ft_ignore_stopwords | OFF |
+ | innodb_ft_max_token_size | 84 |
+ | innodb_ft_min_token_size | 3 |
+ | innodb_ft_num_word_optimize | 2000 |
+@@ -239,9 +259,12 @@
+ | innodb_optimize_fulltext_only | OFF |
+ | innodb_page_cleaners | 1 |
+ | innodb_page_size | 16384 |
++| innodb_parallel_dblwr_encrypt | OFF |
++| innodb_parallel_doublewrite_path | xb_doublewrite |
+ | innodb_parallel_read_threads | 4 |
+ | innodb_print_all_deadlocks | OFF |
+ | innodb_print_ddl_logs | OFF |
++| innodb_print_lock_wait_timeout_info | OFF |
+ | innodb_purge_batch_size | 300 |
+ | innodb_purge_rseg_truncate_frequency | 128 |
+ | innodb_purge_threads | 4 |
+@@ -249,6 +272,7 @@
+ | innodb_read_ahead_threshold | 56 |
+ | innodb_read_io_threads | 4 |
+ | innodb_read_only | OFF |
++| innodb_records_in_range | 0 |
+ | innodb_redo_log_archive_dirs | |
+ | innodb_redo_log_capacity | 104857600 |
+ | innodb_redo_log_encrypt | OFF |
+@@ -256,6 +280,7 @@
+ | innodb_rollback_on_timeout | OFF |
+ | innodb_rollback_segments | 128 |
+ | innodb_segment_reserve_factor | 12.500000 |
++| innodb_show_locks_held | 10 |
+ | innodb_sort_buffer_size | 1048576 |
+ | innodb_spin_wait_delay | 6 |
+ | innodb_spin_wait_pause_multiplier | 50 |
+@@ -271,8 +296,10 @@
+ | innodb_strict_mode | ON |
+ | innodb_sync_array_size | 1 |
+ | innodb_sync_spin_loops | 30 |
++| innodb_sys_tablespace_encrypt | OFF |
+ | innodb_table_locks | ON |
+ | innodb_temp_data_file_path | ibtmp1:12M:autoextend |
++| innodb_temp_tablespace_encrypt | OFF |
+ | innodb_temp_tablespaces_dir | ./#innodb_temp/ |
+ | innodb_thread_concurrency | 0 |
+ | innodb_thread_sleep_delay | 10000 |
+@@ -284,10 +311,12 @@
+ | innodb_use_fdatasync | OFF |
+ | innodb_use_native_aio | ON |
+ | innodb_validate_tablespace_paths | ON |
+-| innodb_version | 8.0.33 |
++| innodb_version | 8.0.32-24 |
+ | innodb_write_io_threads | 4 |
+ | interactive_timeout | 28800 |
+ | internal_tmp_mem_storage_engine | TempTable |
++| jemalloc_detected | OFF |
++| jemalloc_profiling | OFF |
+ | join_buffer_size | 262144 |
+ | keep_files_on_create | OFF |
+ | key_buffer_size | 8388608 |
+@@ -295,34 +324,41 @@
+ | key_cache_block_size | 1024 |
+ | key_cache_division_limit | 100 |
+ | keyring_operations | ON |
++| kill_idle_transaction | 0 |
+ | large_files_support | ON |
+ | large_page_size | 0 |
+ | large_pages | OFF |
+ | lc_messages | en_US |
+-| lc_messages_dir | /root/opt/mysql/oracle8.0.33/share/ |
++| lc_messages_dir | /root/opt/mysql/ps8.0.32/share/ |
+ | lc_time_names | en_US |
+ | license | GPL |
+ | local_infile | OFF |
+ | lock_wait_timeout | 31536000 |
+ | locked_in_memory | OFF |
+ | log_bin | ON |
+-| log_bin_basename | /root/sandboxes/msb_oracle8_0_33/data/binlog |
+-| log_bin_index | /root/sandboxes/msb_oracle8_0_33/data/binlog.index |
++| log_bin_basename | /root/sandboxes/msb_ps8_0_32/data/binlog |
++| log_bin_index | /root/sandboxes/msb_ps8_0_32/data/binlog.index |
+ | log_bin_trust_function_creators | OFF |
+ | log_bin_use_v1_row_events | OFF |
+-| log_error | /root/sandboxes/msb_oracle8_0_33/data/msandbox.err |
++| log_error | /root/sandboxes/msb_ps8_0_32/data/msandbox.err |
+ | log_error_services | log_filter_internal; log_sink_internal |
+ | log_error_suppression_list | |
+ | log_error_verbosity | 2 |
+ | log_output | FILE |
+ | log_queries_not_using_indexes | OFF |
++| log_query_errors | |
+ | log_raw | OFF |
+ | log_replica_updates | ON |
+ | log_slave_updates | ON |
+ | log_slow_admin_statements | OFF |
+ | log_slow_extra | OFF |
++| log_slow_filter | |
++| log_slow_rate_limit | 1 |
++| log_slow_rate_type | session |
+ | log_slow_replica_statements | OFF |
+ | log_slow_slave_statements | OFF |
++| log_slow_sp_statements | ON |
++| log_slow_verbosity | |
+ | log_statements_unsafe_for_binlog | ON |
+ | log_throttle_queries_not_using_indexes | 0 |
+ | log_timestamps | UTC |
+@@ -351,6 +387,8 @@
+ | max_prepared_stmt_count | 16382 |
+ | max_relay_log_size | 0 |
+ | max_seeks_for_key | 18446744073709551615 |
++| max_slowlog_files | 0 |
++| max_slowlog_size | 0 |
+ | max_sort_length | 1024 |
+ | max_sp_recursion_depth | 0 |
+ | max_user_connections | 0 |
+@@ -378,10 +416,10 @@
+ | mysqlx_max_allowed_packet | 67108864 |
+ | mysqlx_max_connections | 100 |
+ | mysqlx_min_worker_threads | 2 |
+-| mysqlx_port | 18034 |
++| mysqlx_port | 18032 |
+ | mysqlx_port_open_timeout | 0 |
+ | mysqlx_read_timeout | 30 |
+-| mysqlx_socket | /root/sandboxes/msb_oracle8_0_33/data/mysqlx-18034.sock |
++| mysqlx_socket | /root/sandboxes/msb_ps8_0_32/data/mysqlx-18032.sock |
+ | mysqlx_ssl_ca | |
+ | mysqlx_ssl_capath | |
+ | mysqlx_ssl_cert | |
+@@ -394,6 +432,7 @@
+ | mysqlx_zstd_default_compression_level | 3 |
+ | mysqlx_zstd_max_client_compression_level | 11 |
+ | net_buffer_length | 16384 |
++| net_buffer_shrink_interval | 0 |
+ | net_read_timeout | 30 |
+ | net_retry_count | 10 |
+ | net_write_timeout | 60 |
+@@ -406,7 +445,7 @@
+ | optimizer_max_subgraph_pairs | 100000 |
+ | optimizer_prune_level | 1 |
+ | optimizer_search_depth | 62 |
+-| optimizer_switch | index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,engine_condition_pushdown=on,index_condition_pushdown=on,mrr=on,mrr_cost_based=on,block_nested_loop=on,batched_key_access=off,materialization=on,semijoin=on,loosescan=on,firstmatch=on,duplicateweedout=on,subquery_materialization_cost_based=on,use_index_extensions=on,condition_fanout_filter=on,derived_merge=on,use_invisible_indexes=off,skip_scan=on,hash_join=on,subquery_to_derived=off,prefer_ordering_index=on,hypergraph_optimizer=off,derived_condition_pushdown=on |
++| optimizer_switch | index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,engine_condition_pushdown=on,index_condition_pushdown=on,mrr=on,mrr_cost_based=on,block_nested_loop=on,batched_key_access=off,materialization=on,semijoin=on,loosescan=on,firstmatch=on,duplicateweedout=on,subquery_materialization_cost_based=on,use_index_extensions=on,condition_fanout_filter=on,derived_merge=on,use_invisible_indexes=off,skip_scan=on,hash_join=on,subquery_to_derived=off,prefer_ordering_index=on,hypergraph_optimizer=off,derived_condition_pushdown=on,favor_range_scan=off |
+ | optimizer_trace | enabled=off,one_line=off |
+ | optimizer_trace_features | greedy_search=on,range_optimizer=on,dynamic_range=on,repeated_subselect=on |
+ | optimizer_trace_limit | 1 |
+@@ -420,7 +459,7 @@
+ | performance_schema | ON |
+ | performance_schema_accounts_size | -1 |
+ | performance_schema_digests_size | 10000 |
+-| performance_schema_error_size | 5288 |
++| performance_schema_error_size | 5335 |
+ | performance_schema_events_stages_history_long_size | 10000 |
+ | performance_schema_events_stages_history_size | 10 |
+ | performance_schema_events_statements_history_long_size | 10000 |
+@@ -438,19 +477,19 @@
+ | performance_schema_max_file_handles | 32768 |
+ | performance_schema_max_file_instances | -1 |
+ | performance_schema_max_index_stat | -1 |
+-| performance_schema_max_memory_classes | 450 |
++| performance_schema_max_memory_classes | 530 |
+ | performance_schema_max_metadata_locks | -1 |
+ | performance_schema_max_mutex_classes | 350 |
+ | performance_schema_max_mutex_instances | -1 |
+ | performance_schema_max_prepared_statements_instances | -1 |
+ | performance_schema_max_program_instances | -1 |
+-| performance_schema_max_rwlock_classes | 60 |
++| performance_schema_max_rwlock_classes | 70 |
+ | performance_schema_max_rwlock_instances | -1 |
+ | performance_schema_max_socket_classes | 10 |
+ | performance_schema_max_socket_instances | -1 |
+ | performance_schema_max_sql_text_length | 1024 |
+ | performance_schema_max_stage_classes | 175 |
+-| performance_schema_max_statement_classes | 219 |
++| performance_schema_max_statement_classes | 227 |
+ | performance_schema_max_statement_stack | 10 |
+ | performance_schema_max_table_handles | -1 |
+ | performance_schema_max_table_instances | -1 |
+@@ -465,15 +504,16 @@
+ | persist_only_admin_x509_subject | |
+ | persist_sensitive_variables_in_plaintext | ON |
+ | persisted_globals_load | ON |
+-| pid_file | /root/sandboxes/msb_oracle8_0_33/data/mysql_sandbox8033.pid |
+-| plugin_dir | /root/opt/mysql/oracle8.0.33/lib/plugin/ |
+-| port | 8033 |
++| pid_file | /root/sandboxes/msb_ps8_0_32/data/mysql_sandbox8032.pid |
++| plugin_dir | /root/opt/mysql/ps8.0.32/lib/plugin/ |
++| port | 8032 |
+ | preload_buffer_size | 32768 |
+ | print_identified_with_as_hex | OFF |
+ | profiling | OFF |
+ | profiling_history_size | 15 |
+ | protocol_compression_algorithms | zlib,zstd,uncompressed |
+ | protocol_version | 10 |
++| proxy_protocol_networks | |
+ | query_alloc_block_size | 8192 |
+ | query_prealloc_size | 8192 |
+ | range_alloc_block_size | 4096 |
+@@ -485,8 +525,8 @@
+ | regexp_stack_limit | 8000000 |
+ | regexp_time_limit | 32 |
+ | relay_log | inc2-relay-bin |
+-| relay_log_basename | /root/sandboxes/msb_oracle8_0_33/data/inc2-relay-bin |
+-| relay_log_index | /root/sandboxes/msb_oracle8_0_33/data/inc2-relay-bin.index |
++| relay_log_basename | /root/sandboxes/msb_ps8_0_32/data/inc2-relay-bin |
++| relay_log_index | /root/sandboxes/msb_ps8_0_32/data/inc2-relay-bin.index |
+ | relay_log_info_file | relay-log.info |
+ | relay_log_info_repository | TABLE |
+ | relay_log_purge | ON |
+@@ -496,8 +536,9 @@
+ | replica_checkpoint_group | 512 |
+ | replica_checkpoint_period | 300 |
+ | replica_compressed_protocol | OFF |
++| replica_enable_event | |
+ | replica_exec_mode | STRICT |
+-| replica_load_tmpdir | /root/sandboxes/msb_oracle8_0_33/tmp |
++| replica_load_tmpdir | /root/sandboxes/msb_ps8_0_32/tmp |
+ | replica_max_allowed_packet | 1073741824 |
+ | replica_net_timeout | 60 |
+ | replica_parallel_type | LOGICAL_CLOCK |
+@@ -510,9 +551,9 @@
+ | replica_type_conversions | |
+ | replication_optimize_for_static_plugin_config | OFF |
+ | replication_sender_observe_commit_only | OFF |
+-| report_host | single-8033 |
++| report_host | single-8032 |
+ | report_password | |
+-| report_port | 8033 |
++| report_port | 8032 |
+ | report_user | |
+ | require_secure_transport | OFF |
+ | rpl_read_size | 8192 |
+@@ -521,12 +562,13 @@
+ | schema_definition_cache | 256 |
+ | secondary_engine_cost_threshold | 100000.000000 |
+ | secure_file_priv | NULL |
++| secure_log_path | |
+ | select_into_buffer_size | 131072 |
+ | select_into_disk_sync | OFF |
+ | select_into_disk_sync_delay | 0 |
+ | server_id | 1 |
+ | server_id_bits | 32 |
+-| server_uuid | 00008033-0000-0000-0000-000000008033 |
++| server_uuid | 00008032-0000-0000-0000-000000008032 |
+ | session_track_gtids | OFF |
+ | session_track_schema | ON |
+ | session_track_state_change | OFF |
+@@ -550,7 +592,7 @@
+ | slave_checkpoint_period | 300 |
+ | slave_compressed_protocol | OFF |
+ | slave_exec_mode | STRICT |
+-| slave_load_tmpdir | /root/sandboxes/msb_oracle8_0_33/tmp |
++| slave_load_tmpdir | /root/sandboxes/msb_ps8_0_32/tmp |
+ | slave_max_allowed_packet | 1073741824 |
+ | slave_net_timeout | 60 |
+ | slave_parallel_type | LOGICAL_CLOCK |
+@@ -564,8 +606,10 @@
+ | slave_type_conversions | |
+ | slow_launch_time | 2 |
+ | slow_query_log | OFF |
+-| slow_query_log_file | /root/sandboxes/msb_oracle8_0_33/data/inc2-slow.log |
+-| socket | /root/sandboxes/msb_oracle8_0_33/data/mysql_sandbox8033.sock |
++| slow_query_log_always_write_time | 10.000000 |
++| slow_query_log_file | /root/sandboxes/msb_ps8_0_32/data/inc2-slow.log |
++| slow_query_log_use_global_control | |
++| socket | /root/sandboxes/msb_ps8_0_32/data/mysql_sandbox8032.sock |
+ | sort_buffer_size | 262144 |
+ | source_verify_checksum | OFF |
+ | sql_auto_is_null | OFF |
+@@ -605,19 +649,29 @@
+ | table_encryption_privilege_check | OFF |
+ | table_open_cache | 4000 |
+ | table_open_cache_instances | 16 |
++| table_open_cache_triggers | 524288 |
+ | tablespace_definition_cache | 256 |
+ | temptable_max_mmap | 1073741824 |
+ | temptable_max_ram | 1073741824 |
+ | temptable_use_mmap | ON |
+ | terminology_use_previous | NONE |
++| tf_sequence_table_max_upper_bound | 1048576 |
+ | thread_cache_size | 9 |
+ | thread_handling | one-thread-per-connection |
++| thread_pool_high_prio_mode | transactions |
++| thread_pool_high_prio_tickets | 4294967295 |
++| thread_pool_idle_timeout | 60 |
++| thread_pool_max_threads | 100000 |
++| thread_pool_oversubscribe | 3 |
++| thread_pool_size | 2 |
++| thread_pool_stall_limit | 500 |
+ | thread_stack | 1048576 |
++| thread_statistics | OFF |
+ | time_zone | SYSTEM |
+ | tls_ciphersuites | |
+ | tls_version | TLSv1.2,TLSv1.3 |
+ | tmp_table_size | 16777216 |
+-| tmpdir | /root/sandboxes/msb_oracle8_0_33/tmp |
++| tmpdir | /root/sandboxes/msb_ps8_0_32/tmp |
+ | transaction_alloc_block_size | 8192 |
+ | transaction_isolation | REPEATABLE-READ |
+ | transaction_prealloc_size | 4096 |
+@@ -625,12 +679,14 @@
+ | transaction_write_set_extraction | XXHASH64 |
+ | unique_checks | ON |
+ | updatable_views_with_limit | YES |
+-| version | 8.0.33 |
+-| version_comment | MySQL Community Server - GPL |
++| userstat | OFF |
++| version | 8.0.32-24 |
++| version_comment | Percona Server (GPL), Release 24, Revision e5c6e9d2 |
+ | version_compile_machine | x86_64 |
+ | version_compile_os | Linux |
+ | version_compile_zlib | 1.2.13 |
++| version_suffix | |
+ | wait_timeout | 28800 |
+ | windowing_use_high_precision | ON |
+ | xa_detach_on_prepare | ON |
+--
++

@@ -1,0 +1,237 @@
+diff -u msb_maria10_6_12-variables.txt msb_maria10_11_2-variables.txt 
+--- msb_maria10_6_12-variables.txt      2023-04-30 09:02:37.728077157 -0400
++++ msb_maria10_11_2-variables.txt      2023-04-30 09:02:37.590077146 -0400
+@@ -1,6 +1,7 @@
+ 
+ | Variable_name | Value |
+ 
++| allow_suspicious_udfs | OFF |
+ | alter_algorithm | DEFAULT |
+ | analyze_sample_percentage | 100.000000 |
+ | aria_block_size | 8192 |
+@@ -29,9 +30,10 @@
+ | autocommit | ON |
+ | automatic_sp_privileges | ON |
+ | back_log | 80 |
+-| basedir | /root/opt/mysql/maria10.6.12 |
++| basedir | /root/opt/mysql/maria10.11.2 |
+ | big_tables | OFF |
+ | bind_address | 127.0.0.1 |
++| binlog_alter_two_phase | OFF |
+ | binlog_annotate_row_events | ON |
+ | binlog_cache_size | 32768 |
+ | binlog_checksum | CRC32 |
+@@ -53,7 +55,7 @@
+ | character_set_results | latin1 |
+ | character_set_server | latin1 |
+ | character_set_system | utf8mb3 |
+-| character_sets_dir | /root/opt/mysql/maria10.6.12/share/charsets/ |
++| character_sets_dir | /root/opt/mysql/maria10.11.2/share/charsets/ |
+ | check_constraint_checks | ON |
+ | collation_connection | latin1_swedish_ci |
+ | collation_database | latin1_swedish_ci |
+@@ -66,7 +68,7 @@
+ | concurrent_insert | AUTO |
+ | connect_timeout | 10 |
+ | core_file | OFF |
+-| datadir | /root/sandboxes/msb_maria10_6_12/data/ |
++| datadir | /root/sandboxes/msb_maria10_11_2/data/ |
+ | date_format | %Y-%m-%d |
+ | datetime_format | %Y-%m-%d %H:%i:%s |
+ | deadlock_search_depth_long | 15 |
+@@ -93,7 +95,7 @@
+ | event_scheduler | OFF |
+ | expensive_subquery_limit | 100 |
+ | expire_logs_days | 0.000000 |
+-| explicit_defaults_for_timestamp | OFF |
++| explicit_defaults_for_timestamp | ON |
+ | extra_max_connections | 1 |
+ | extra_port | 0 |
+ | flush | OFF |
+@@ -146,7 +148,7 @@
+ | innodb_autoextend_increment | 64 |
+ | innodb_autoinc_lock_mode | 1 |
+ | innodb_buf_dump_status_frequency | 0 |
+-| innodb_buffer_pool_chunk_size | 134217728 |
++| innodb_buffer_pool_chunk_size | 2097152 |
+ | innodb_buffer_pool_dump_at_shutdown | ON |
+ | innodb_buffer_pool_dump_now | OFF |
+ | innodb_buffer_pool_dump_pct | 25 |
+@@ -214,9 +216,9 @@
+ | innodb_io_capacity_max | 2000 |
+ | innodb_lock_wait_timeout | 50 |
+ | innodb_log_buffer_size | 16777216 |
++| innodb_log_file_buffering | ON |
+ | innodb_log_file_size | 100663296 |
+ | innodb_log_group_home_dir | ./ |
+-| innodb_log_write_ahead_size | 8192 |
+ | innodb_lru_flush_size | 32 |
+ | innodb_lru_scan_depth | 1536 |
+ | innodb_max_dirty_pages_pct | 90.000000 |
+@@ -235,7 +237,7 @@
+ | innodb_open_files | 2000 |
+ | innodb_optimize_fulltext_only | OFF |
+ | innodb_page_size | 16384 |
+-| innodb_prefix_index_cluster_optimization | OFF |
++| innodb_prefix_index_cluster_optimization | ON |
+ | innodb_print_all_deadlocks | OFF |
+ | innodb_purge_batch_size | 300 |
+ | innodb_purge_rseg_truncate_frequency | 128 |
+@@ -269,7 +271,6 @@
+ | innodb_undo_tablespaces | 0 |
+ | innodb_use_atomic_writes | ON |
+ | innodb_use_native_aio | ON |
+-| innodb_version | 10.6.12 |
+ | innodb_write_io_threads | 4 |
+ | interactive_timeout | 28800 |
+ | join_buffer_size | 262144 |
+@@ -299,13 +300,17 @@
+ | log_bin_index | |
+ | log_bin_trust_function_creators | OFF |
+ | log_disabled_statements | sp |
+-| log_error | /root/sandboxes/msb_maria10_6_12/data/msandbox.err |
++| log_error | /root/sandboxes/msb_maria10_11_2/data/msandbox.err |
+ | log_output | FILE |
+ | log_queries_not_using_indexes | OFF |
+ | log_slave_updates | OFF |
+ | log_slow_admin_statements | ON |
+ | log_slow_disabled_statements | sp |
+ | log_slow_filter | admin,filesort,filesort_on_disk,filesort_priority_queue,full_join,full_scan,query_cache,query_cache_miss,tmp_table,tmp_table_on_disk |
++| log_slow_min_examined_row_limit | 0 |
++| log_slow_query | OFF |
++| log_slow_query_file | inc2-slow.log |
++| log_slow_query_time | 10.000000 |
+ | log_slow_rate_limit | 1 |
+ | log_slow_slave_statements | ON |
+ | log_slow_verbosity | |
+@@ -365,8 +370,9 @@
+ | old_mode | UTF8_IS_UTF8MB3 |
+ | old_passwords | OFF |
+ | open_files_limit | 32184 |
++| optimizer_extra_pruning_depth | 8 |
+ | optimizer_max_sel_arg_weight | 32000 |
+-| optimizer_prune_level | 1 |
++| optimizer_prune_level | 2 |
+ | optimizer_search_depth | 62 |
+ | optimizer_selectivity_sampling_limit | 100 |
+ | optimizer_switch | index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,index_merge_sort_intersection=off,engine_condition_pushdown=off,index_condition_pushdown=on,derived_merge=on,derived_with_keys=on,firstmatch=on,loosescan=on,materialization=on,in_to_exists=on,semijoin=on,partial_match_rowid_merge=on,partial_match_table_scan=on,subquery_cache=on,mrr=off,mrr_cost_based=off,mrr_sort_keys=off,outer_join_with_cache=on,semijoin_with_cache=on,join_cache_incremental=on,join_cache_hashed=on,join_cache_bka=on,optimize_join_buffer_size=on,table_elimination=on,extended_keys=on,exists_to_in=on,orderby_uses_equalities=on,condition_pushdown_for_derived=on,split_materialized=on,condition_pushdown_for_subquery=on,rowid_filter=on,condition_pushdown_from_having=on,not_null_range_scan=off |
+@@ -415,10 +421,10 @@
+ | performance_schema_setup_actors_size | -1 |
+ | performance_schema_setup_objects_size | -1 |
+ | performance_schema_users_size | -1 |
+-| pid_file | /root/sandboxes/msb_maria10_6_12/data/mysql_sandbox10612.pid |
+-| plugin_dir | /root/opt/mysql/maria10.6.12/lib/plugin/ |
++| pid_file | /root/sandboxes/msb_maria10_11_2/data/mysql_sandbox41102.pid |
++| plugin_dir | /root/opt/mysql/maria10.11.2/lib/plugin/ |
+ | plugin_maturity | gamma |
+-| port | 10612 |
++| port | 41102 |
+ | preload_buffer_size | 32768 |
+ | profiling | OFF |
+ | profiling_history_size | 15 |
+@@ -451,11 +457,12 @@
+ | replicate_events_marked_for_skip | REPLICATE |
+ | replicate_ignore_db | |
+ | replicate_ignore_table | |
++| replicate_rewrite_db | |
+ | replicate_wild_do_table | |
+ | replicate_wild_ignore_table | |
+-| report_host | single-10612 |
++| report_host | single-41102 |
+ | report_password | |
+-| report_port | 10612 |
++| report_port | 41102 |
+ | report_user | |
+ | require_secure_transport | OFF |
+ | rowid_merge_buff_size | 8388608 |
+@@ -477,6 +484,7 @@
+ | session_track_system_variables | autocommit,character_set_client,character_set_connection,character_set_results,time_zone |
+ | session_track_transaction_info | OFF |
+ | skip_external_locking | ON |
++| skip_grant_tables | OFF |
+ | skip_name_resolve | OFF |
+ | skip_networking | OFF |
+ | skip_show_database | OFF |
+@@ -484,8 +492,9 @@
+ | slave_ddl_exec_mode | IDEMPOTENT |
+ | slave_domain_parallel_threads | 0 |
+ | slave_exec_mode | STRICT |
+-| slave_load_tmpdir | /root/sandboxes/msb_maria10_6_12/tmp |
++| slave_load_tmpdir | /root/sandboxes/msb_maria10_11_2/tmp |
+ | slave_max_allowed_packet | 1073741824 |
++| slave_max_statement_time | 0.000000 |
+ | slave_net_timeout | 60 |
+ | slave_parallel_max_queued | 131072 |
+ | slave_parallel_mode | optimistic |
+@@ -501,7 +510,7 @@
+ | slow_launch_time | 2 |
+ | slow_query_log | OFF |
+ | slow_query_log_file | inc2-slow.log |
+-| socket | /root/sandboxes/msb_maria10_6_12/data/mysql_sandbox10612.sock |
++| socket | /root/sandboxes/msb_maria10_11_2/data/mysql_sandbox41102.sock |
+ | sort_buffer_size | 2097152 |
+ | sql_auto_is_null | OFF |
+ | sql_big_selects | ON |
+@@ -535,6 +544,7 @@
+ | system_time_zone | EDT |
+ | system_versioning_alter_history | ERROR |
+ | system_versioning_asof | DEFAULT |
++| system_versioning_insert_history | OFF |
+ | table_definition_cache | 400 |
+ | table_open_cache | 2000 |
+ | table_open_cache_instances | 8 |
+@@ -560,7 +570,7 @@
+ | tmp_disk_table_size | 18446744073709551615 |
+ | tmp_memory_table_size | 16777216 |
+ | tmp_table_size | 16777216 |
+-| tmpdir | /root/sandboxes/msb_maria10_6_12/tmp |
++| tmpdir | /root/sandboxes/msb_maria10_11_2/tmp |
+ | transaction_alloc_block_size | 8192 |
+ | transaction_prealloc_size | 4096 |
+ | tx_isolation | REPEATABLE-READ |
+@@ -569,16 +579,17 @@
+ | updatable_views_with_limit | YES |
+ | use_stat_tables | PREFERABLY_FOR_QUERIES |
+ | userstat | OFF |
+-| version | 10.6.12-MariaDB |
++| version | 10.11.2-MariaDB |
+ | version_comment | MariaDB Server |
+ | version_compile_machine | x86_64 |
+ | version_compile_os | linux-systemd |
+ | version_malloc_library | system |
+-| version_source_revision | 4c79e15cc3716f69c044d4287ad2160da8101cdc |
++| version_source_revision | cafba8761af55ae16cc69c9b53a341340a845b36 |
+ | version_ssl_library | WolfSSL 5.5.4 |
+ | wait_timeout | 28800 |
+ | wsrep_osu_method | TOI |
+ | wsrep_sr_store | table |
++| wsrep_allowlist | |
+ | wsrep_auto_increment_control | ON |
+ | wsrep_causal_reads | OFF |
+ | wsrep_certification_rules | strict |
+@@ -586,7 +597,7 @@
+ | wsrep_cluster_address | |
+ | wsrep_cluster_name | my_wsrep_cluster |
+ | wsrep_convert_lock_to_trx | OFF |
+-| wsrep_data_home_dir | /root/sandboxes/msb_maria10_6_12/data/ |
++| wsrep_data_home_dir | /root/sandboxes/msb_maria10_11_2/data/ |
+ | wsrep_dbug_option | |
+ | wsrep_debug | NONE |
+ | wsrep_desync | OFF |
+@@ -612,7 +623,6 @@
+ | wsrep_provider_options | |
+ | wsrep_recover | OFF |
+ | wsrep_reject_queries | NONE |
+-| wsrep_replicate_myisam | OFF |
+ | wsrep_restart_slave | OFF |
+ | wsrep_retry_autocommit | 1 |
+ | wsrep_slave_fk_checks | ON |
+@@ -624,7 +634,7 @@
+ | wsrep_sst_method | rsync |
+ | wsrep_sst_receive_address | AUTO |
+ | wsrep_start_position | 00000000-0000-0000-0000-000000000000:-1 |
+-| wsrep_strict_ddl | OFF |
++| wsrep_status_file | |
+ | wsrep_sync_wait | 0 |
+ | wsrep_trx_fragment_size | 0 |
+ | wsrep_trx_fragment_unit | bytes 

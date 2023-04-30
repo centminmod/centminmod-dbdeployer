@@ -1,0 +1,534 @@
+diff -u msb_maria10_3_38-variables.txt msb_maria10_11_2-variables.txt 
+--- msb_maria10_3_38-variables.txt      2023-04-30 09:02:37.632077149 -0400
++++ msb_maria10_11_2-variables.txt      2023-04-30 09:02:37.590077146 -0400
+@@ -1,7 +1,9 @@
+ 
+ | Variable_name | Value |
+ 
++| allow_suspicious_udfs | OFF |
+ | alter_algorithm | DEFAULT |
++| analyze_sample_percentage | 100.000000 |
+ | aria_block_size | 8192 |
+ | aria_checkpoint_interval | 30 |
+ | aria_checkpoint_log_activity | 1048576 |
+@@ -28,19 +30,22 @@
+ | autocommit | ON |
+ | automatic_sp_privileges | ON |
+ | back_log | 80 |
+-| basedir | /root/opt/mysql/maria10.3.38 |
++| basedir | /root/opt/mysql/maria10.11.2 |
+ | big_tables | OFF |
+ | bind_address | 127.0.0.1 |
++| binlog_alter_two_phase | OFF |
+ | binlog_annotate_row_events | ON |
+ | binlog_cache_size | 32768 |
+ | binlog_checksum | CRC32 |
+ | binlog_commit_wait_count | 0 |
+ | binlog_commit_wait_usec | 100000 |
+ | binlog_direct_non_transactional_updates | OFF |
++| binlog_expire_logs_seconds | 0 |
+ | binlog_file_cache_size | 16384 |
+ | binlog_format | MIXED |
+ | binlog_optimize_thread_scheduling | ON |
+ | binlog_row_image | FULL |
++| binlog_row_metadata | NO_LOG |
+ | binlog_stmt_cache_size | 32768 |
+ | bulk_insert_buffer_size | 8388608 |
+ | character_set_client | latin1 |
+@@ -49,8 +54,8 @@
+ | character_set_filesystem | binary |
+ | character_set_results | latin1 |
+ | character_set_server | latin1 |
+-| character_set_system | utf8 |
+-| character_sets_dir | /root/opt/mysql/maria10.3.38/share/charsets/ |
++| character_set_system | utf8mb3 |
++| character_sets_dir | /root/opt/mysql/maria10.11.2/share/charsets/ |
+ | check_constraint_checks | ON |
+ | collation_connection | latin1_swedish_ci |
+ | collation_database | latin1_swedish_ci |
+@@ -63,7 +68,7 @@
+ | concurrent_insert | AUTO |
+ | connect_timeout | 10 |
+ | core_file | OFF |
+-| datadir | /root/sandboxes/msb_maria10_3_38/data/ |
++| datadir | /root/sandboxes/msb_maria10_11_2/data/ |
+ | date_format | %Y-%m-%d |
+ | datetime_format | %Y-%m-%d %H:%i:%s |
+ | deadlock_search_depth_long | 15 |
+@@ -71,6 +76,7 @@
+ | deadlock_timeout_long | 50000000 |
+ | deadlock_timeout_short | 10000 |
+ | debug_no_thread_alarm | OFF |
++| default_password_lifetime | 0 |
+ | default_regex_flags | |
+ | default_storage_engine | InnoDB |
+ | default_tmp_storage_engine | |
+@@ -79,16 +85,17 @@
+ | delayed_insert_limit | 100 |
+ | delayed_insert_timeout | 300 |
+ | delayed_queue_size | 1000 |
++| disconnect_on_expired_password | OFF |
+ | div_precision_increment | 4 |
+ | encrypt_binlog | OFF |
+ | encrypt_tmp_disk_tables | OFF |
+ | encrypt_tmp_files | OFF |
+ | enforce_storage_engine | |
+-| eq_range_index_dive_limit | 0 |
++| eq_range_index_dive_limit | 200 |
+ | event_scheduler | OFF |
+ | expensive_subquery_limit | 100 |
+-| expire_logs_days | 0 |
+-| explicit_defaults_for_timestamp | OFF |
++| expire_logs_days | 0.000000 |
++| explicit_defaults_for_timestamp | ON |
+ | extra_max_connections | 1 |
+ | extra_port | 0 |
+ | flush | OFF |
+@@ -104,6 +111,7 @@
+ | group_concat_max_len | 1048576 |
+ | gtid_binlog_pos | |
+ | gtid_binlog_state | |
++| gtid_cleanup_batch_size | 64 |
+ | gtid_current_pos | |
+ | gtid_domain_id | 0 |
+ | gtid_ignore_duplicates | OFF |
+@@ -120,8 +128,8 @@
+ | have_rtree_keys | YES |
+ | have_ssl | DISABLED |
+ | have_symlink | YES |
+-| histogram_size | 0 |
+-| histogram_type | SINGLE_PREC_HB |
++| histogram_size | 254 |
++| histogram_type | DOUBLE_PREC_HB |
+ | host_cache_size | 279 |
+ | hostname | inc2.http3.xyz |
+ | idle_readonly_transaction_timeout | 0 |
+@@ -135,41 +143,33 @@
+ | init_slave | |
+ | innodb_adaptive_flushing | ON |
+ | innodb_adaptive_flushing_lwm | 10.000000 |
+-| innodb_adaptive_hash_index | ON |
++| innodb_adaptive_hash_index | OFF |
+ | innodb_adaptive_hash_index_parts | 8 |
+-| innodb_adaptive_max_sleep_delay | 150000 |
+ | innodb_autoextend_increment | 64 |
+ | innodb_autoinc_lock_mode | 1 |
+-| innodb_background_scrub_data_check_interval | 3600 |
+-| innodb_background_scrub_data_compressed | OFF |
+-| innodb_background_scrub_data_interval | 604800 |
+-| innodb_background_scrub_data_uncompressed | OFF |
+ | innodb_buf_dump_status_frequency | 0 |
+-| innodb_buffer_pool_chunk_size | 134217728 |
++| innodb_buffer_pool_chunk_size | 2097152 |
+ | innodb_buffer_pool_dump_at_shutdown | ON |
+ | innodb_buffer_pool_dump_now | OFF |
+ | innodb_buffer_pool_dump_pct | 25 |
+ | innodb_buffer_pool_filename | ib_buffer_pool |
+-| innodb_buffer_pool_instances | 1 |
+ | innodb_buffer_pool_load_abort | OFF |
+ | innodb_buffer_pool_load_at_startup | ON |
+ | innodb_buffer_pool_load_now | OFF |
+ | innodb_buffer_pool_size | 134217728 |
+ | innodb_change_buffer_max_size | 25 |
+-| innodb_change_buffering | all |
+-| innodb_checksum_algorithm | crc32 |
+-| innodb_checksums | ON |
++| innodb_change_buffering | none |
++| innodb_checksum_algorithm | full_crc32 |
+ | innodb_cmp_per_index_enabled | OFF |
+-| innodb_commit_concurrency | 0 |
+ | innodb_compression_algorithm | zlib |
+ | innodb_compression_default | OFF |
+ | innodb_compression_failure_threshold_pct | 5 |
+ | innodb_compression_level | 6 |
+ | innodb_compression_pad_pct_max | 50 |
+-| innodb_concurrency_tickets | 5000 |
+ | innodb_data_file_path | ibdata1:12M:autoextend |
+ | innodb_data_home_dir | |
+ | innodb_deadlock_detect | ON |
++| innodb_deadlock_report | full |
+ | innodb_default_encryption_key_id | 1 |
+ | innodb_default_row_format | dynamic |
+ | innodb_defragment | OFF |
+@@ -188,16 +188,14 @@
+ | innodb_encryption_threads | 0 |
+ | innodb_fast_shutdown | 1 |
+ | innodb_fatal_semaphore_wait_threshold | 600 |
+-| innodb_file_format | |
+ | innodb_file_per_table | ON |
+ | innodb_fill_factor | 100 |
+ | innodb_flush_log_at_timeout | 1 |
+ | innodb_flush_log_at_trx_commit | 2 |
+-| innodb_flush_method | fsync |
++| innodb_flush_method | O_DIRECT |
+ | innodb_flush_neighbors | 1 |
+ | innodb_flush_sync | ON |
+ | innodb_flushing_avg_loops | 30 |
+-| innodb_force_load_corrupted | OFF |
+ | innodb_force_primary_key | OFF |
+ | innodb_force_recovery | 0 |
+ | innodb_ft_aux_table | |
+@@ -212,25 +210,18 @@
+ | innodb_ft_sort_pll_degree | 2 |
+ | innodb_ft_total_cache_size | 640000000 |
+ | innodb_ft_user_stopword_table | |
+-| innodb_idle_flush_pct | 100 |
+ | innodb_immediate_scrub_data_uncompressed | OFF |
+-| innodb_instant_alter_column_allowed | add_last |
++| innodb_instant_alter_column_allowed | add_drop_reorder |
+ | innodb_io_capacity | 200 |
+ | innodb_io_capacity_max | 2000 |
+-| innodb_large_prefix | |
+-| innodb_lock_schedule_algorithm | fcfs |
+ | innodb_lock_wait_timeout | 50 |
+-| innodb_locks_unsafe_for_binlog | OFF |
+ | innodb_log_buffer_size | 16777216 |
+-| innodb_log_checksums | ON |
+-| innodb_log_compressed_pages | ON |
+-| innodb_log_file_size | 50331648 |
+-| innodb_log_files_in_group | 2 |
++| innodb_log_file_buffering | ON |
++| innodb_log_file_size | 100663296 |
+ | innodb_log_group_home_dir | ./ |
+-| innodb_log_optimize_ddl | OFF |
+-| innodb_log_write_ahead_size | 8192 |
+-| innodb_lru_scan_depth | 1024 |
+-| innodb_max_dirty_pages_pct | 75.000000 |
++| innodb_lru_flush_size | 32 |
++| innodb_lru_scan_depth | 1536 |
++| innodb_max_dirty_pages_pct | 90.000000 |
+ | innodb_max_dirty_pages_pct_lwm | 0.000000 |
+ | innodb_max_purge_lag | 0 |
+ | innodb_max_purge_lag_delay | 0 |
+@@ -245,9 +236,8 @@
+ | innodb_online_alter_log_max_size | 134217728 |
+ | innodb_open_files | 2000 |
+ | innodb_optimize_fulltext_only | OFF |
+-| innodb_page_cleaners | 1 |
+ | innodb_page_size | 16384 |
+-| innodb_prefix_index_cluster_optimization | OFF |
++| innodb_prefix_index_cluster_optimization | ON |
+ | innodb_print_all_deadlocks | OFF |
+ | innodb_purge_batch_size | 300 |
+ | innodb_purge_rseg_truncate_frequency | 128 |
+@@ -256,11 +246,8 @@
+ | innodb_read_ahead_threshold | 56 |
+ | innodb_read_io_threads | 4 |
+ | innodb_read_only | OFF |
+-| innodb_replication_delay | 0 |
++| innodb_read_only_compressed | OFF |
+ | innodb_rollback_on_timeout | OFF |
+-| innodb_rollback_segments | 128 |
+-| innodb_scrub_log | OFF |
+-| innodb_scrub_log_speed | 256 |
+ | innodb_sort_buffer_size | 1048576 |
+ | innodb_spin_wait_delay | 4 |
+ | innodb_stats_auto_recalc | ON |
+@@ -270,26 +257,20 @@
+ | innodb_stats_on_metadata | OFF |
+ | innodb_stats_persistent | ON |
+ | innodb_stats_persistent_sample_pages | 20 |
+-| innodb_stats_sample_pages | 8 |
+ | innodb_stats_traditional | ON |
+ | innodb_stats_transient_sample_pages | 8 |
+ | innodb_status_output | OFF |
+ | innodb_status_output_locks | OFF |
+ | innodb_strict_mode | ON |
+-| innodb_sync_array_size | 1 |
+ | innodb_sync_spin_loops | 30 |
+ | innodb_table_locks | ON |
+ | innodb_temp_data_file_path | ibtmp1:12M:autoextend |
+-| innodb_thread_concurrency | 0 |
+-| innodb_thread_sleep_delay | 10000 |
+ | innodb_tmpdir | |
+ | innodb_undo_directory | ./ |
+ | innodb_undo_log_truncate | OFF |
+-| innodb_undo_logs | 128 |
+ | innodb_undo_tablespaces | 0 |
+ | innodb_use_atomic_writes | ON |
+ | innodb_use_native_aio | ON |
+-| innodb_version | 10.3.38 |
+ | innodb_write_io_threads | 4 |
+ | interactive_timeout | 28800 |
+ | join_buffer_size | 262144 |
+@@ -319,13 +300,17 @@
+ | log_bin_index | |
+ | log_bin_trust_function_creators | OFF |
+ | log_disabled_statements | sp |
+-| log_error | /root/sandboxes/msb_maria10_3_38/data/msandbox.err |
++| log_error | /root/sandboxes/msb_maria10_11_2/data/msandbox.err |
+ | log_output | FILE |
+ | log_queries_not_using_indexes | OFF |
+ | log_slave_updates | OFF |
+ | log_slow_admin_statements | ON |
+ | log_slow_disabled_statements | sp |
+ | log_slow_filter | admin,filesort,filesort_on_disk,filesort_priority_queue,full_join,full_scan,query_cache,query_cache_miss,tmp_table,tmp_table_on_disk |
++| log_slow_min_examined_row_limit | 0 |
++| log_slow_query | OFF |
++| log_slow_query_file | inc2-slow.log |
++| log_slow_query_time | 10.000000 |
+ | log_slow_rate_limit | 1 |
+ | log_slow_slave_statements | ON |
+ | log_slow_verbosity | |
+@@ -349,10 +334,11 @@
+ | max_insert_delayed_threads | 20 |
+ | max_join_size | 18446744073709551615 |
+ | max_length_for_sort_data | 1024 |
+-| max_long_data_size | 16777216 |
++| max_password_errors | 4294967295 |
+ | max_prepared_stmt_count | 16382 |
+-| max_recursive_iterations | 4294967295 |
++| max_recursive_iterations | 1000 |
+ | max_relay_log_size | 1073741824 |
++| max_rowid_filter_size | 131072 |
+ | max_seeks_for_key | 4294967295 |
+ | max_session_mem_used | 9223372036854775807 |
+ | max_sort_length | 1024 |
+@@ -365,7 +351,6 @@
+ | metadata_locks_hash_instances | 8 |
+ | min_examined_row_limit | 0 |
+ | mrr_buffer_size | 262144 |
+-| multi_range_count | 256 |
+ | myisam_block_size | 1024 |
+ | myisam_data_pointer_size | 6 |
+ | myisam_max_sort_file_size | 9223372036853727232 |
+@@ -382,13 +367,17 @@
+ | net_write_timeout | 60 |
+ | old | OFF |
+ | old_alter_table | DEFAULT |
+-| old_mode | |
++| old_mode | UTF8_IS_UTF8MB3 |
+ | old_passwords | OFF |
+ | open_files_limit | 32184 |
+-| optimizer_prune_level | 1 |
++| optimizer_extra_pruning_depth | 8 |
++| optimizer_max_sel_arg_weight | 32000 |
++| optimizer_prune_level | 2 |
+ | optimizer_search_depth | 62 |
+ | optimizer_selectivity_sampling_limit | 100 |
+-| optimizer_switch | index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,index_merge_sort_intersection=off,engine_condition_pushdown=off,index_condition_pushdown=on,derived_merge=on,derived_with_keys=on,firstmatch=on,loosescan=on,materialization=on,in_to_exists=on,semijoin=on,partial_match_rowid_merge=on,partial_match_table_scan=on,subquery_cache=on,mrr=off,mrr_cost_based=off,mrr_sort_keys=off,outer_join_with_cache=on,semijoin_with_cache=on,join_cache_incremental=on,join_cache_hashed=on,join_cache_bka=on,optimize_join_buffer_size=off,table_elimination=on,extended_keys=on,exists_to_in=on,orderby_uses_equalities=on,condition_pushdown_for_derived=on,split_materialized=on |
++| optimizer_switch | index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,index_merge_sort_intersection=off,engine_condition_pushdown=off,index_condition_pushdown=on,derived_merge=on,derived_with_keys=on,firstmatch=on,loosescan=on,materialization=on,in_to_exists=on,semijoin=on,partial_match_rowid_merge=on,partial_match_table_scan=on,subquery_cache=on,mrr=off,mrr_cost_based=off,mrr_sort_keys=off,outer_join_with_cache=on,semijoin_with_cache=on,join_cache_incremental=on,join_cache_hashed=on,join_cache_bka=on,optimize_join_buffer_size=on,table_elimination=on,extended_keys=on,exists_to_in=on,orderby_uses_equalities=on,condition_pushdown_for_derived=on,split_materialized=on,condition_pushdown_for_subquery=on,rowid_filter=on,condition_pushdown_from_having=on,not_null_range_scan=off |
++| optimizer_trace | enabled=off |
++| optimizer_trace_max_mem_size | 1048576 |
+ | optimizer_use_condition_selectivity | 1 |
+ | performance_schema | OFF |
+ | performance_schema_accounts_size | -1 |
+@@ -397,35 +386,45 @@
+ | performance_schema_events_stages_history_size | -1 |
+ | performance_schema_events_statements_history_long_size | -1 |
+ | performance_schema_events_statements_history_size | -1 |
++| performance_schema_events_transactions_history_long_size | -1 |
++| performance_schema_events_transactions_history_size | -1 |
+ | performance_schema_events_waits_history_long_size | -1 |
+ | performance_schema_events_waits_history_size | -1 |
+ | performance_schema_hosts_size | -1 |
+-| performance_schema_max_cond_classes | 80 |
++| performance_schema_max_cond_classes | 90 |
+ | performance_schema_max_cond_instances | -1 |
+ | performance_schema_max_digest_length | 1024 |
+-| performance_schema_max_file_classes | 50 |
++| performance_schema_max_file_classes | 80 |
+ | performance_schema_max_file_handles | 32768 |
+ | performance_schema_max_file_instances | -1 |
+-| performance_schema_max_mutex_classes | 200 |
++| performance_schema_max_index_stat | -1 |
++| performance_schema_max_memory_classes | 320 |
++| performance_schema_max_metadata_locks | -1 |
++| performance_schema_max_mutex_classes | 210 |
+ | performance_schema_max_mutex_instances | -1 |
+-| performance_schema_max_rwlock_classes | 40 |
++| performance_schema_max_prepared_statements_instances | -1 |
++| performance_schema_max_program_instances | -1 |
++| performance_schema_max_rwlock_classes | 50 |
+ | performance_schema_max_rwlock_instances | -1 |
+ | performance_schema_max_socket_classes | 10 |
+ | performance_schema_max_socket_instances | -1 |
++| performance_schema_max_sql_text_length | 1024 |
+ | performance_schema_max_stage_classes | 160 |
+-| performance_schema_max_statement_classes | 200 |
++| performance_schema_max_statement_classes | 222 |
++| performance_schema_max_statement_stack | 10 |
+ | performance_schema_max_table_handles | -1 |
+ | performance_schema_max_table_instances | -1 |
++| performance_schema_max_table_lock_stat | -1 |
+ | performance_schema_max_thread_classes | 50 |
+ | performance_schema_max_thread_instances | -1 |
+ | performance_schema_session_connect_attrs_size | -1 |
+-| performance_schema_setup_actors_size | 100 |
+-| performance_schema_setup_objects_size | 100 |
++| performance_schema_setup_actors_size | -1 |
++| performance_schema_setup_objects_size | -1 |
+ | performance_schema_users_size | -1 |
+-| pid_file | /root/sandboxes/msb_maria10_3_38/data/mysql_sandbox10338.pid |
+-| plugin_dir | /root/opt/mysql/maria10.3.38/lib/plugin/ |
++| pid_file | /root/sandboxes/msb_maria10_11_2/data/mysql_sandbox41102.pid |
++| plugin_dir | /root/opt/mysql/maria10.11.2/lib/plugin/ |
+ | plugin_maturity | gamma |
+-| port | 10338 |
++| port | 41102 |
+ | preload_buffer_size | 32768 |
+ | profiling | OFF |
+ | profiling_history_size | 15 |
+@@ -458,12 +457,14 @@
+ | replicate_events_marked_for_skip | REPLICATE |
+ | replicate_ignore_db | |
+ | replicate_ignore_table | |
++| replicate_rewrite_db | |
+ | replicate_wild_do_table | |
+ | replicate_wild_ignore_table | |
+-| report_host | single-10338 |
++| report_host | single-41102 |
+ | report_password | |
+-| report_port | 10338 |
++| report_port | 41102 |
+ | report_user | |
++| require_secure_transport | OFF |
+ | rowid_merge_buff_size | 8388608 |
+ | rpl_semi_sync_master_enabled | OFF |
+ | rpl_semi_sync_master_timeout | 10000 |
+@@ -483,6 +484,7 @@
+ | session_track_system_variables | autocommit,character_set_client,character_set_connection,character_set_results,time_zone |
+ | session_track_transaction_info | OFF |
+ | skip_external_locking | ON |
++| skip_grant_tables | OFF |
+ | skip_name_resolve | OFF |
+ | skip_networking | OFF |
+ | skip_show_database | OFF |
+@@ -490,28 +492,30 @@
+ | slave_ddl_exec_mode | IDEMPOTENT |
+ | slave_domain_parallel_threads | 0 |
+ | slave_exec_mode | STRICT |
+-| slave_load_tmpdir | /root/sandboxes/msb_maria10_3_38/tmp |
++| slave_load_tmpdir | /root/sandboxes/msb_maria10_11_2/tmp |
+ | slave_max_allowed_packet | 1073741824 |
++| slave_max_statement_time | 0.000000 |
+ | slave_net_timeout | 60 |
+ | slave_parallel_max_queued | 131072 |
+-| slave_parallel_mode | conservative |
++| slave_parallel_mode | optimistic |
+ | slave_parallel_threads | 0 |
+ | slave_parallel_workers | 0 |
+ | slave_run_triggers_for_rbr | NO |
+ | slave_skip_errors | OFF |
+ | slave_sql_verify_checksum | ON |
+ | slave_transaction_retries | 10 |
+-| slave_transaction_retry_errors | 1213,1205 |
++| slave_transaction_retry_errors | 1158,1159,1160,1161,1205,1213,1429,2013,12701 |
+ | slave_transaction_retry_interval | 0 |
+ | slave_type_conversions | |
+ | slow_launch_time | 2 |
+ | slow_query_log | OFF |
+ | slow_query_log_file | inc2-slow.log |
+-| socket | /root/sandboxes/msb_maria10_3_38/data/mysql_sandbox10338.sock |
++| socket | /root/sandboxes/msb_maria10_11_2/data/mysql_sandbox41102.sock |
+ | sort_buffer_size | 2097152 |
+ | sql_auto_is_null | OFF |
+ | sql_big_selects | ON |
+ | sql_buffer_result | OFF |
++| sql_if_exists | OFF |
+ | sql_log_bin | ON |
+ | sql_log_off | OFF |
+ | sql_mode | STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION |
+@@ -540,15 +544,18 @@
+ | system_time_zone | EDT |
+ | system_versioning_alter_history | ERROR |
+ | system_versioning_asof | DEFAULT |
++| system_versioning_insert_history | OFF |
+ | table_definition_cache | 400 |
+ | table_open_cache | 2000 |
+ | table_open_cache_instances | 8 |
+ | tcp_keepalive_interval | 0 |
+ | tcp_keepalive_probes | 0 |
+ | tcp_keepalive_time | 0 |
++| tcp_nodelay | ON |
+ | thread_cache_size | 151 |
+-| thread_concurrency | 10 |
+ | thread_handling | one-thread-per-connection |
++| thread_pool_dedicated_listener | OFF |
++| thread_pool_exact_stats | OFF |
+ | thread_pool_idle_timeout | 60 |
+ | thread_pool_max_threads | 65536 |
+ | thread_pool_oversubscribe | 3 |
+@@ -559,28 +566,30 @@
+ | thread_stack | 299008 |
+ | time_format | %H:%i:%s |
+ | time_zone | SYSTEM |
+-| timed_mutexes | OFF |
++| tls_version | TLSv1.1,TLSv1.2,TLSv1.3 |
+ | tmp_disk_table_size | 18446744073709551615 |
+ | tmp_memory_table_size | 16777216 |
+ | tmp_table_size | 16777216 |
+-| tmpdir | /root/sandboxes/msb_maria10_3_38/tmp |
++| tmpdir | /root/sandboxes/msb_maria10_11_2/tmp |
+ | transaction_alloc_block_size | 8192 |
+ | transaction_prealloc_size | 4096 |
+ | tx_isolation | REPEATABLE-READ |
+ | tx_read_only | OFF |
+ | unique_checks | ON |
+ | updatable_views_with_limit | YES |
+-| use_stat_tables | NEVER |
++| use_stat_tables | PREFERABLY_FOR_QUERIES |
+ | userstat | OFF |
+-| version | 10.3.38-MariaDB |
++| version | 10.11.2-MariaDB |
+ | version_comment | MariaDB Server |
+ | version_compile_machine | x86_64 |
+ | version_compile_os | linux-systemd |
+ | version_malloc_library | system |
+-| version_source_revision | c73985f2ce8a391582787f3e310a011c1a712bec |
+-| version_ssl_library | YaSSL 2.4.4 |
++| version_source_revision | cafba8761af55ae16cc69c9b53a341340a845b36 |
++| version_ssl_library | WolfSSL 5.5.4 |
+ | wait_timeout | 28800 |
+ | wsrep_osu_method | TOI |
++| wsrep_sr_store | table |
++| wsrep_allowlist | |
+ | wsrep_auto_increment_control | ON |
+ | wsrep_causal_reads | OFF |
+ | wsrep_certification_rules | strict |
+@@ -588,31 +597,32 @@
+ | wsrep_cluster_address | |
+ | wsrep_cluster_name | my_wsrep_cluster |
+ | wsrep_convert_lock_to_trx | OFF |
+-| wsrep_data_home_dir | /root/sandboxes/msb_maria10_3_38/data/ |
++| wsrep_data_home_dir | /root/sandboxes/msb_maria10_11_2/data/ |
+ | wsrep_dbug_option | |
+-| wsrep_debug | OFF |
++| wsrep_debug | NONE |
+ | wsrep_desync | OFF |
+ | wsrep_dirty_reads | OFF |
+ | wsrep_drupal_282555_workaround | OFF |
+ | wsrep_forced_binlog_format | NONE |
+ | wsrep_gtid_domain_id | 0 |
+ | wsrep_gtid_mode | OFF |
+-| wsrep_load_data_splitting | ON |
++| wsrep_ignore_apply_errors | 7 |
++| wsrep_load_data_splitting | OFF |
+ | wsrep_log_conflicts | OFF |
+ | wsrep_max_ws_rows | 0 |
+ | wsrep_max_ws_size | 2147483647 |
++| wsrep_mode | |
+ | wsrep_mysql_replication_bundle | 0 |
+ | wsrep_node_address | |
+ | wsrep_node_incoming_address | AUTO |
+ | wsrep_node_name | inc2.http3.xyz |
+ | wsrep_notify_cmd | |
+ | wsrep_on | OFF |
+-| wsrep_patch_version | wsrep_25.24 |
++| wsrep_patch_version | wsrep_26.22 |
+ | wsrep_provider | none |
+ | wsrep_provider_options | |
+ | wsrep_recover | OFF |
+ | wsrep_reject_queries | NONE |
+-| wsrep_replicate_myisam | OFF |
+ | wsrep_restart_slave | OFF |
+ | wsrep_retry_autocommit | 1 |
+ | wsrep_slave_fk_checks | ON |
+@@ -624,5 +634,8 @@
+ | wsrep_sst_method | rsync |
+ | wsrep_sst_receive_address | AUTO |
+ | wsrep_start_position | 00000000-0000-0000-0000-000000000000:-1 |
++| wsrep_status_file | |
+ | wsrep_sync_wait | 0 |
++| wsrep_trx_fragment_size | 0 |
++| wsrep_trx_fragment_unit | bytes |
