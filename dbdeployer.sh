@@ -20,7 +20,7 @@ mdb_ver_four=10.4.28
 mdb_ver_three=10.3.38
 mdb_ver_two=10.2.44
 mdb_ver_one=10.1.48
-oracle_ver_latest=8.0.32
+oracle_ver_latest=8.0.33
 oracle_ver=5.7.41
 
 MARIADB_MIRROR='mirror.rackspace.com'
@@ -134,10 +134,10 @@ oracle_install() {
     cd "$INSTALL_DIR"
 
     if [[ "$GLIBC_VER" = '2.28' ]]; then
-      wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz
-      dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz
+      wget -4 -q https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64.tar.gz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64.tar.gz
+      dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64.tar.gz
     else
-      wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
+      wget -4 -q https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
       dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
     fi
     # pushd /root/sandboxes/msb_oracle8.0.16
@@ -171,7 +171,7 @@ oracle_shell() {
     echo "installing Oracle MySQL Shell"
     cd "$INSTALL_DIR"
     GLIBC_VER=$(rpm -qa glibc | awk -F '-' '{print $2}' | head -n1)
-    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-Shell/mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz -O mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
+    wget -4 -q https://cdn.mysql.com/Downloads/MySQL-Shell/mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz -O mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
     dbdeployer unpack${VERBOSE_OPT} --shell --prefix=oracle mysql-shell-${oracle_ver_latest}-linux-glibc2.12-x86-64bit.tar.gz
   elif [ -f "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh" ]; then
     echo "${DBDEPLOY_PARENT_DIR}/oracle${oracle_ver_latest}/bin/mysqlsh already installed"
