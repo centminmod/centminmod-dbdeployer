@@ -132,8 +132,14 @@ oracle_install() {
     echo
     echo "installing Oracle MySQL binary tarballs"
     cd "$INSTALL_DIR"
-    wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
-    dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
+
+    if [[ "$GLIBC_VER" = '2.28' ]]; then
+      wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz
+      dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.gz
+    else
+      wget -4 -q https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz -O mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
+      dbdeployer unpack${VERBOSE_OPT} --prefix=oracle mysql-${oracle_ver_latest}-linux-glibc${GLIBC_VER}-x86_64-minimal.tar.xz
+    fi
     # pushd /root/sandboxes/msb_oracle8.0.16
     # ./my sqladmin var | tr -s ' '
     # ./my sql -e '\s'
