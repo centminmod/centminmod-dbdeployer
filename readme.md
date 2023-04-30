@@ -42,36 +42,36 @@ usage:
 ./dbdeployer.sh install-sandboxes-force
 ./dbdeployer.sh install-sandboxes binlogs
 ./dbdeployer.sh install-sandboxes-force binlogs
-./dbdeployer.sh install-sandbox-instance nobinlogs msb_maria10_3_38
-./dbdeployer.sh install-sandbox-instance nobinlogs msb_maria10_4_28
-./dbdeployer.sh install-sandbox-instance nobinlogs msb_maria10_6_12
+./dbdeployer.sh install-sandbox-instance nobinlogs maria10.3.38
+./dbdeployer.sh install-sandbox-instance nobinlogs maria10.4.28
+./dbdeployer.sh install-sandbox-instance nobinlogs maria10.6.12
 ./dbdeployer.sh install-sandbox-instance nobinlogs maria10.11.2
-./dbdeployer.sh install-sandbox-instance nobinlogs msb_ps8_0_32
-./dbdeployer.sh install-sandbox-instance nobinlogs msb_oracle8_0_33
-./dbdeployer.sh install-sandbox-instance binlogs msb_maria10_3_38
-./dbdeployer.sh install-sandbox-instance binlogs msb_maria10_4_28
-./dbdeployer.sh install-sandbox-instance binlogs msb_maria10_6_12
+./dbdeployer.sh install-sandbox-instance nobinlogs ps8.0.32
+./dbdeployer.sh install-sandbox-instance nobinlogs oracle8.0.33
+./dbdeployer.sh install-sandbox-instance binlogs maria10.3.38
+./dbdeployer.sh install-sandbox-instance binlogs maria10.4.28
+./dbdeployer.sh install-sandbox-instance binlogs maria10.6.12
 ./dbdeployer.sh install-sandbox-instance binlogs maria10.11.2
-./dbdeployer.sh install-sandbox-instance binlogs msb_ps8_0_32
-./dbdeployer.sh install-sandbox-instance binlogs msb_oracle8_0_33
-./dbdeployer.sh delete-sandbox-instance msb_maria10_3_38
-./dbdeployer.sh delete-sandbox-instance msb_maria10_4_28
-./dbdeployer.sh delete-sandbox-instance msb_maria10_6_12
+./dbdeployer.sh install-sandbox-instance binlogs ps8.0.32
+./dbdeployer.sh install-sandbox-instance binlogs oracle8.0.33
+./dbdeployer.sh delete-sandbox-instance maria10.3.38
+./dbdeployer.sh delete-sandbox-instance maria10.4.28
+./dbdeployer.sh delete-sandbox-instance maria10.6.12
 ./dbdeployer.sh delete-sandbox-instance maria10.11.2
-./dbdeployer.sh delete-sandbox-instance msb_ps8_0_32
-./dbdeployer.sh delete-sandbox-instance msb_oracle8_0_33
-./dbdeployer.sh install-sandbox-instance-force nobinlogs msb_maria10_3_38
-./dbdeployer.sh install-sandbox-instance-force nobinlogs msb_maria10_4_28
-./dbdeployer.sh install-sandbox-instance-force nobinlogs msb_maria10_6_12
+./dbdeployer.sh delete-sandbox-instance ps8.0.32
+./dbdeployer.sh delete-sandbox-instance oracle8.0.33
+./dbdeployer.sh install-sandbox-instance-force nobinlogs maria10.3.38
+./dbdeployer.sh install-sandbox-instance-force nobinlogs maria10.4.28
+./dbdeployer.sh install-sandbox-instance-force nobinlogs maria10.6.12
 ./dbdeployer.sh install-sandbox-instance-force nobinlogs maria10.11.2
-./dbdeployer.sh install-sandbox-instance-force nobinlogs msb_ps8_0_32
-./dbdeployer.sh install-sandbox-instance-force nobinlogs msb_oracle8_0_33
-./dbdeployer.sh install-sandbox-instance-force binlogs msb_maria10_3_38
-./dbdeployer.sh install-sandbox-instance-force binlogs msb_maria10_4_28
-./dbdeployer.sh install-sandbox-instance-force binlogs msb_maria10_6_12
+./dbdeployer.sh install-sandbox-instance-force nobinlogs ps8.0.32
+./dbdeployer.sh install-sandbox-instance-force nobinlogs oracle8.0.33
+./dbdeployer.sh install-sandbox-instance-force binlogs maria10.3.38
+./dbdeployer.sh install-sandbox-instance-force binlogs maria10.4.28
+./dbdeployer.sh install-sandbox-instance-force binlogs maria10.6.12
 ./dbdeployer.sh install-sandbox-instance-force binlogs maria10.11.2
-./dbdeployer.sh install-sandbox-instance-force binlogs msb_ps8_0_32
-./dbdeployer.sh install-sandbox-instance-force binlogs msb_oracle8_0_33
+./dbdeployer.sh install-sandbox-instance-force binlogs ps8.0.32
+./dbdeployer.sh install-sandbox-instance-force binlogs oracle8.0.33
 ```
 
 ## for dbdeployer binary
