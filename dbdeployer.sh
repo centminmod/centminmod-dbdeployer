@@ -20,7 +20,7 @@ mdb_ver_four=10.4.28
 mdb_ver_three=10.3.38
 mdb_ver_two=10.2.44
 mdb_ver_one=10.1.48
-oracle_ver_latest=8.0.33
+oracle_ver_latest=8.0.32
 oracle_ver=5.7.41
 
 MARIADB_MIRROR='mirror.rackspace.com'
