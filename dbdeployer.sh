@@ -252,12 +252,15 @@ cmds() {
     echo "sandbox info"
     echo "---------------------------------------------------------------"
     dbdeployer sandboxes | awk '{print $1}' | while read d; do
-      echo
-      echo "/root/sandboxes/$d/my.sandbox.cnf"
-      cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
-      echo
-      echo "/root/sandboxes/$d/my sql -e '\s'"
-      /root/sandboxes/$d/my sql -e '\s'
+      if [ -f "/root/sandboxes/$d/my.sandbox.cnf" ]; then
+        echo "/root/sandboxes/$d/my.sandbox.cnf"
+        cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
+      fi
+      if [ -f "/root/sandboxes/$d/my" ]; then
+        echo
+        echo "/root/sandboxes/$d/my sql -e '\s'"
+        /root/sandboxes/$d/my sql -e '\s'
+      fi
       # echo
       echo "saving $d variables to $DBDEPLOY_HOMEDIR/${d}-variables.txt"
       echo "/root/sandboxes/$d/my sqladmin var"
@@ -268,11 +271,17 @@ cmds() {
 }
 
 delete_sandboxes() {
+  instance=$1
   echo
   echo "delete sandboxes only"
   echo
-  echo "dbdeployer delete all"
-  echo y | dbdeployer delete all
+  if [ "$instance" ]; then
+    echo "dbdeployer delete $instance"
+    echo y | dbdeployer delete "$instance"
+  else
+    echo "dbdeployer delete all"
+    echo y | dbdeployer delete all
+  fi
 }
 
 resetall() {
@@ -319,13 +328,18 @@ resetbins() {
 install_bins() {
   forced=$1
   binlogs="$2"
+  version="$3"
   if [[ "$forced" = force ]]; then
     force_opt=' --force'
   else
     force_opt=""
   fi
   echo "dbdeployer deploy single sandboxes"
-  dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
+  if [[ "$version" ]]; then
+    dbdeploy_bins=$version
+  else
+    dbdeploy_bins=$(dbdeployer versions| grep -v 'Basedir' | xargs)
+  fi
   declare -a arrays
   arrays=(${dbdeploy_bins})
   for b in "${arrays[@]}"; do
@@ -357,13 +371,22 @@ install_bins() {
   dbdeployer sandboxes
   echo
   echo "sandbox info"
-  dbdeployer sandboxes | awk '{print $1}' | while read d; do
+  if [[ "$version" ]]; then
+    list_sandboxes="$version"
+  else
+    list_sandboxes=$(dbdeployer sandboxes | awk '{print $1}')
+  fi
+  echo "$list_sandboxes" | while read d; do
     echo
-    echo "/root/sandboxes/$d/my.sandbox.cnf"
-    cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
-    echo
-    echo "/root/sandboxes/$d/my sql -e '\s'"
-    /root/sandboxes/$d/my sql -e '\s'
+    if [ -f "/root/sandboxes/$d/my.sandbox.cnf" ]; then
+      echo "/root/sandboxes/$d/my.sandbox.cnf"
+      cat /root/sandboxes/$d/my.sandbox.cnf | tr -s '\n\n\n\n' '\n\n' | grep -v '^#'
+    fi
+    if [ -f "/root/sandboxes/$d/my" ]; then
+      echo
+      echo "/root/sandboxes/$d/my sql -e '\s'"
+      /root/sandboxes/$d/my sql -e '\s'
+    fi
   done
 }
 
@@ -416,8 +439,17 @@ case "$1" in
   delete-sandboxes )
     delete_sandboxes
     ;;
+  delete-sandbox-instance )
+    delete_sandboxes "$2"
+    ;;
   check )
     cmds
+    ;;
+  install-sandbox-instance )
+    install_bins noforce "$2" "$3"
+    ;;
+  install-sandbox-instance-force )
+    install_bins force "$2" "$3"
     ;;
   install-sandboxes )
     install_bins noforce "$2"
@@ -445,5 +477,35 @@ case "$1" in
     echo "$0 install-sandboxes-force"
     echo "$0 install-sandboxes binlogs"
     echo "$0 install-sandboxes-force binlogs"
+    echo "$0 install-sandbox-instance nobinlogs msb_maria10_3_38"
+    echo "$0 install-sandbox-instance nobinlogs msb_maria10_4_28"
+    echo "$0 install-sandbox-instance nobinlogs msb_maria10_6_12"
+    echo "$0 install-sandbox-instance nobinlogs maria10.11.2"
+    echo "$0 install-sandbox-instance nobinlogs msb_ps8_0_32"
+    echo "$0 install-sandbox-instance nobinlogs msb_oracle8_0_33"
+    echo "$0 install-sandbox-instance binlogs msb_maria10_3_38"
+    echo "$0 install-sandbox-instance binlogs msb_maria10_4_28"
+    echo "$0 install-sandbox-instance binlogs msb_maria10_6_12"
+    echo "$0 install-sandbox-instance binlogs maria10.11.2"
+    echo "$0 install-sandbox-instance binlogs msb_ps8_0_32"
+    echo "$0 install-sandbox-instance binlogs msb_oracle8_0_33"
+    echo "$0 delete-sandbox-instance msb_maria10_3_38"
+    echo "$0 delete-sandbox-instance msb_maria10_4_28"
+    echo "$0 delete-sandbox-instance msb_maria10_6_12"
+    echo "$0 delete-sandbox-instance maria10.11.2"
+    echo "$0 delete-sandbox-instance msb_ps8_0_32"
+    echo "$0 delete-sandbox-instance msb_oracle8_0_33"
+    echo "$0 install-sandbox-instance-force nobinlogs msb_maria10_3_38"
+    echo "$0 install-sandbox-instance-force nobinlogs msb_maria10_4_28"
+    echo "$0 install-sandbox-instance-force nobinlogs msb_maria10_6_12"
+    echo "$0 install-sandbox-instance-force nobinlogs maria10.11.2"
+    echo "$0 install-sandbox-instance-force nobinlogs msb_ps8_0_32"
+    echo "$0 install-sandbox-instance-force nobinlogs msb_oracle8_0_33"
+    echo "$0 install-sandbox-instance-force binlogs msb_maria10_3_38"
+    echo "$0 install-sandbox-instance-force binlogs msb_maria10_4_28"
+    echo "$0 install-sandbox-instance-force binlogs msb_maria10_6_12"
+    echo "$0 install-sandbox-instance-force binlogs maria10.11.2"
+    echo "$0 install-sandbox-instance-force binlogs msb_ps8_0_32"
+    echo "$0 install-sandbox-instance-force binlogs msb_oracle8_0_33"
     ;;
 esac
