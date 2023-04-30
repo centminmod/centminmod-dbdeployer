@@ -10,7 +10,10 @@
 * [Install](#install)
 * [Reset](#reset)
 * [Deploy Single Sandbox Instances](#deploy-single-sandbox-instances)
+    * [Example with binary logging disabled](#example-with-binary-logging-disabled)
+    * [Example with binary logging enabled](#example-with-binary-logging-enabled)
 * [Check](#check)
+* [Delete Sandboxes Only](#delete-sandboxes-only)
 * [Reset Binaries Only](#reset-binaries-only)
 
 # Usage
@@ -252,15 +255,19 @@ Delete and remove all dbdeployer sandboxes and binaries for a fresh start.
 ./dbdeployer.sh reset
 ```
 
-```
-
-```
-
 # Deploy Single Sandbox Instances
 
 ```
 ./dbdeployer.sh install-sandboxes
 ```
+or with binary logs enabled
+
+```
+./dbdeployer.sh install-sandboxes binlogs
+```
+
+Example with binary logging disabled
+
 ```
 ./dbdeployer.sh install-sandboxes
 dbdeployer deploy single sandboxes
@@ -434,6 +441,184 @@ UNIX socket:            /root/sandboxes/msb_oracle8_0_33/data/mysql_sandbox8033.
 Uptime:                 0 sec
 
 Threads: 2  Questions: 42  Slow queries: 0  Opens: 149  Flush tables: 3  Open tables: 65  Queries per second avg: 0.000
+--------------
+```
+
+## Example with binary logging enabled
+
+```
+./dbdeployer.sh install-sandboxes binlogs
+dbdeployer deploy single sandboxes
+
+creating maria10.3.38 single sandbox instance
+dbdeployer deploy single maria10.3.38 --skip-library-check --socket-in-datadir --init-options '--auth-root-authentication-method=normal' --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+Database installed in $HOME/sandboxes/msb_maria10_3_38
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.4.28 single sandbox instance
+dbdeployer deploy single maria10.4.28 --skip-library-check --socket-in-datadir --init-options '--auth-root-authentication-method=normal' --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+Database installed in $HOME/sandboxes/msb_maria10_4_28
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.5.19 single sandbox instance
+dbdeployer deploy single maria10.5.19 --skip-library-check --socket-in-datadir --init-options '--auth-root-authentication-method=normal' --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+Database installed in $HOME/sandboxes/msb_maria10_5_19
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating maria10.6.12 single sandbox instance
+dbdeployer deploy single maria10.6.12 --skip-library-check --socket-in-datadir --init-options '--auth-root-authentication-method=normal' --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+Database installed in $HOME/sandboxes/msb_maria10_6_12
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating oracle8.0.33 single sandbox instance
+dbdeployer deploy single oracle8.0.33 --skip-library-check --socket-in-datadir --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+Database installed in $HOME/sandboxes/msb_oracle8_0_33
+run 'dbdeployer usage single' for basic instructions'
+. sandbox server started
+
+creating ps8.0.32 single sandbox instance
+dbdeployer deploy single ps8.0.32 --skip-library-check --socket-in-datadir --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1
+error creating sandbox: 'check directory directory /root/sandboxes/msb_ps8_0_32 already exists. Use --force to override'
+
+dbdeployer sandboxes
+ msb_maria10_3_38         :   single   maria10.3.38   [10338 ]      
+ msb_maria10_4_28         :   single   maria10.4.28   [10428 ]      
+ msb_maria10_5_19         :   single   maria10.5.19   [10519 ]      
+ msb_maria10_6_12         :   single   maria10.6.12   [10612 ]      
+ msb_oracle8_0_33         :   single   oracle8.0.33   [8033 18033 ] 
+
+sandbox info
+
+/root/sandboxes/msb_maria10_3_38/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.3.38/bin/mysql  Ver 15.1 Distrib 10.3.38-MariaDB, for linux-systemd (x86_64) using readline 5.1
+
+Connection id:          10
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.3.38-MariaDB-log MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /root/sandboxes/msb_maria10_3_38/data/mysql_sandbox10338.sock
+Uptime:                 13 sec
+
+Threads: 7  Questions: 20  Slow queries: 0  Opens: 17  Flush tables: 1  Open tables: 11  Queries per second avg: 1.538
+--------------
+
+
+/root/sandboxes/msb_maria10_4_28/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.4.28/bin/mysql  Ver 15.1 Distrib 10.4.28-MariaDB, for linux-systemd (x86_64) using readline 5.1
+
+Connection id:          10
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.4.28-MariaDB-log MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /root/sandboxes/msb_maria10_4_28/data/mysql_sandbox10428.sock
+Uptime:                 10 sec
+
+Threads: 7  Questions: 20  Slow queries: 0  Opens: 19  Flush tables: 1  Open tables: 13  Queries per second avg: 2.000
+--------------
+
+
+/root/sandboxes/msb_maria10_5_19/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.5.19/bin/mysql  Ver 15.1 Distrib 10.5.19-MariaDB, for linux-systemd (x86_64) using readline 5.1
+
+Connection id:          5
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.5.19-MariaDB-log MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /root/sandboxes/msb_maria10_5_19/data/mysql_sandbox10519.sock
+Uptime:                 8 sec
+
+Threads: 1  Questions: 20  Slow queries: 0  Opens: 19  Open tables: 13  Queries per second avg: 2.500
+--------------
+
+
+/root/sandboxes/msb_maria10_6_12/my sql -e '\s'
+--------------
+/root/opt/mysql/maria10.6.12/bin/mysql  Ver 15.1 Distrib 10.6.12-MariaDB, for linux-systemd (x86_64) using readline 5.1
+
+Connection id:          5
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server:                 MariaDB
+Server version:         10.6.12-MariaDB-log MariaDB Server
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8mb3
+Conn.  characterset:    utf8mb3
+UNIX socket:            /root/sandboxes/msb_maria10_6_12/data/mysql_sandbox10612.sock
+Uptime:                 6 sec
+
+Threads: 1  Questions: 20  Slow queries: 0  Opens: 19  Open tables: 13  Queries per second avg: 3.333
+--------------
+
+
+/root/sandboxes/msb_oracle8_0_33/my sql -e '\s'
+--------------
+/root/opt/mysql/oracle8.0.33/bin/mysql  Ver 8.0.33 for Linux on x86_64 (MySQL Community Server - GPL)
+
+Connection id:          9
+Current database:
+Current user:           msandbox@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         8.0.33 MySQL Community Server - GPL
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    utf8mb4
+Db     characterset:    utf8mb4
+Client characterset:    utf8mb4
+Conn.  characterset:    utf8mb4
+UNIX socket:            /root/sandboxes/msb_oracle8_0_33/data/mysql_sandbox8033.sock
+Uptime:                 1 sec
+
+Threads: 2  Questions: 42  Slow queries: 0  Opens: 149  Flush tables: 3  Open tables: 65  Queries per second avg: 42.000
 --------------
 ```
 

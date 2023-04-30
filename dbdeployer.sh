@@ -331,8 +331,12 @@ install_bins() {
     else
       mdb_authopt=""
     fi
-    if [[ "$binlogs" = 'binlogs' ]]; then
-      mycnf_opts=" --my-cnf-options '\nlog-bin=mysql-bin\nmax_binlog_size=500M\nbinlog_file_cache_size=131072\nbinlog_cache_size=131072\nbinlog_stmt_cache_size=131072\nbinlog-commit-wait-count=100\nbinlog_commit_wait_usec=100000\nexpire_logs_days=7\nbinlog-format=row\nsync-binlog=1\n'"
+    if [[ "$binlogs" = 'binlogs' || "$binlogs" = 'binlog' ]]; then
+      if [[ "$b" =~ maria ]]; then
+        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_file_cache_size=131072 --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=binlog-commit-wait-count=100 --my-cnf-options=binlog_commit_wait_usec=100000 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1"
+      else
+        mycnf_opts=" --my-cnf-options=log-bin=mysql-bin --my-cnf-options=max_binlog_size=500M --my-cnf-options=binlog_cache_size=131072 --my-cnf-options=binlog_stmt_cache_size=131072 --my-cnf-options=expire_logs_days=7 --my-cnf-options=binlog-format=row --my-cnf-options=sync-binlog=1"
+      fi
     else
       mycnf_opts=""
     fi
